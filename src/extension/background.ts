@@ -91,3 +91,11 @@ chrome.runtime.onConnect.addListener((port) => {
   const handler = connectionHandlers[port.name];
   return handler && handler(port);
 });
+
+// Keep service worker alive (MV3 idle timeout is ~30s)
+chrome.alarms.create("keepalive", { periodInMinutes: 25 / 60 }); // every 25s
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "keepalive") {
+    debug("Keepalive alarm fired");
+  }
+});

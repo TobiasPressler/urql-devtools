@@ -10,17 +10,17 @@ type UseFlashResponse = [React.CSSProperties, Flash];
 
 /** Hook for flashing a screen element */
 export const useFlash = (): UseFlashResponse => {
-  const [props, setSpring] = useSpring(() => ({
+  const [props, api] = useSpring(() => ({
     config: { duration: 300 },
   }));
 
   const flash = useCallback(
     () =>
-      setSpring({
+      api.start({
         from: defaultState,
         to: [flashState, defaultState],
       } as any),
-    [setSpring]
+    [api]
   );
 
   return [props as React.CSSProperties, flash];
