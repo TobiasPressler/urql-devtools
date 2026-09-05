@@ -43,9 +43,9 @@ const handleContentScriptConnection = (port: chrome.runtime.Port) => {
     const tabId = port.sender.tab.id;
 
     addToTarget({ tabId, port, source: "exchange" });
-    chrome.pageAction.setIcon({ tabId, path: "/assets/icon-32.png" });
+    chrome.action.setIcon({ tabId, path: "/assets/icon-32.png" });
     port.onDisconnect.addListener(() => {
-      chrome.pageAction.setIcon(
+      chrome.action.setIcon(
         {
           tabId,
           path: "/assets/icon-disabled-32.png",

@@ -7,10 +7,10 @@
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "resolveJsonModule": true,
     "noEmit": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["@types/chrome"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

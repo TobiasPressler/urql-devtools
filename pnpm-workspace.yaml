@@ -1,0 +1,9 @@
+allowBuilds:
+  core-js: true
+  dtrace-provider: true
+  electron: true
+  es5-ext: true
+  fsevents: true
+  husky-v4: true
+  puppeteer: true
+  spawn-sync: true
