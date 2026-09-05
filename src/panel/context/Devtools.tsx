@@ -36,6 +36,18 @@ export const DevtoolsContext = createContext<DevtoolsContextType>(null as any);
 export const useDevtoolsContext = (): DevtoolsContextType =>
   useContext(DevtoolsContext);
 
+const sendInitMessage = (conn: ReturnType<typeof createConnection>) => {
+  conn.postMessage({
+    type: "connection-init",
+    source: "devtools",
+    tabId:
+      process.env.BUILD_ENV === "extension"
+        ? chrome?.devtools?.inspectedWindow?.tabId
+        : NaN,
+    version: process.env.PKG_VERSION,
+  });
+};
+
 export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [client, setClient] = useState<DevtoolsContextType["client"]>({
     connected: false,
@@ -47,19 +59,9 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
     Record<string, (msg: ExchangeMessage) => void>
   >({});
 
-  const getConnection = useCallback(() => {
-    if (connectionRef.current) {
-      return connectionRef.current;
-    }
+  const initConnection = useCallback(() => {
     const conn = createConnection();
     connectionRef.current = conn;
-
-    if (process.env.BUILD_ENV === "extension") {
-      (conn as chrome.runtime.Port).onDisconnect.addListener(() => {
-        connectionRef.current = null;
-        setClient({ connected: false });
-      });
-    }
 
     conn.onMessage.addListener((msg: ExchangeMessage | DevtoolsMessage) => {
       if (msg?.source !== "exchange") {
@@ -68,19 +70,31 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
       Object.values(messageHandlers.current).forEach((h) => h(msg));
     });
 
+    if (process.env.BUILD_ENV === "extension") {
+      (conn as chrome.runtime.Port).onDisconnect.addListener(() => {
+        connectionRef.current = null;
+        setClient({ connected: false });
+      });
+    }
+
+    sendInitMessage(conn);
     return conn;
   }, []);
 
   const sendMessage = useCallback<DevtoolsContextType["sendMessage"]>(
     (msg) => {
       try {
-        getConnection().postMessage(msg);
+        if (!connectionRef.current) {
+          initConnection();
+        }
+        connectionRef.current!.postMessage(msg);
       } catch {
         // Port disconnected — force reconnection on next message
         connectionRef.current = null;
+        setClient({ connected: false });
       }
     },
-    [getConnection]
+    [initConnection]
   );
 
   const addMessageHandler = useCallback<
@@ -94,18 +108,28 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
     };
   }, []);
 
-  // Send init message on mount
+  // Initial connection
   useEffect(() => {
-    getConnection().postMessage({
-      type: "connection-init",
-      source: "devtools",
-      tabId:
-        process.env.BUILD_ENV === "extension"
-          ? chrome?.devtools?.inspectedWindow?.tabId
-          : NaN,
-      version: process.env.PKG_VERSION,
-    });
-  }, [getConnection]);
+    initConnection();
+  }, [initConnection]);
+
+  // Auto-reconnect when disconnected (MV3 service worker idle timeout)
+  useEffect(() => {
+    if (client.connected) {
+      return;
+    }
+
+    // Retry connection-init every 2s until exchange responds
+    const timer = setInterval(() => {
+      if (!connectionRef.current) {
+        initConnection();
+      } else {
+        sendInitMessage(connectionRef.current);
+      }
+    }, 2000);
+
+    return () => clearInterval(timer);
+  }, [client.connected, initConnection]);
 
   // Listen for client connect
   useEffect(() => {
@@ -121,8 +145,8 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
         return;
       }
 
-      if (message.type === "connection-init") {
-        getConnection().postMessage({
+      if (message.type === "connection-init" && connectionRef.current) {
+        connectionRef.current.postMessage({
           type: "connection-acknowledge",
           source: "devtools",
           version: process.env.PKG_VERSION,
