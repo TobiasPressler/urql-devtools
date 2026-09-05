@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { PropsWithChildren, useMemo } from "react";
 import { DebugEvent, gql } from "@urql/core";
 import { TimelineProvider, DevtoolsContext } from "../../context";
 import { Timeline } from "./Timeline";
@@ -151,7 +151,7 @@ const defaultEvents: DebugEvent[] = [
   },
 ] as any;
 
-const DevtoolsContextMock: FC<{ events?: typeof defaultEvents }> = ({
+const DevtoolsContextMock: PropsWithChildren<{ events?: typeof defaultEvents }> = ({
   children,
   events = defaultEvents,
 }) => {

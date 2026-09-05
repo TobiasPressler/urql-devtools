@@ -59,6 +59,7 @@ const panelHtml = `<!DOCTYPE html>
     <meta charset="UTF-8" />
     <title>Urql Devtools</title>
     <meta http-equiv="Content-Security-Policy" content="${csp}" />
+    <link rel="stylesheet" href="panel.css" />
   </head>
   <body>
     <div id="root"></div>

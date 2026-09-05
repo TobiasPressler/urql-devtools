@@ -1,4 +1,4 @@
-import React, { useState, useMemo, FC } from "react";
+import React, { useState, useMemo, PropsWithChildren } from "react";
 import styled from "styled-components";
 import { TimelineContext } from "../../../context/Timeline";
 import { Settings, Filter } from "./Settings";
@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   padding: 20px;
 `;
 
-const MockTimelineProvider: FC = ({ children }) => {
+const MockTimelineProvider: PropsWithChildren = ({ children }) => {
   const [filter, setFilter] = useState({
     source: ["devtoolsExchange"],
     graphqlType: ["query", "mutation", "subscription"],

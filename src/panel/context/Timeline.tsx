@@ -5,11 +5,12 @@ import React, {
   useState,
   useCallback,
   useMemo,
-  FC,
+  PropsWithChildren,
   SetStateAction,
   useContext,
   useEffect,
   useLayoutEffect,
+  FC,
 } from "react";
 import { scaleLinear, ScaleLinear } from "d3-scale";
 import { DebugEvent } from "@urql/core";
@@ -261,7 +262,7 @@ const useTimelineDomain = () => {
   );
 };
 
-export const TimelineProvider: FC = ({ children }) => {
+export const TimelineProvider: FC<PropsWithChildren>  = ({ children }) => {
   const { addMessageHandler } = useContext(DevtoolsContext);
   const domain = useTimelineDomain();
   const [filterables, setFilterables] = useState<

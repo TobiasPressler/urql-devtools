@@ -2,10 +2,11 @@ import React, {
   createContext,
   useState,
   useEffect,
-  FC,
+  PropsWithChildren,
   useMemo,
   SetStateAction,
   Dispatch,
+  FC,
 } from "react";
 import { useDevtoolsContext } from "../Devtools";
 import { handleResponse, ParsedNodeMap, ParsedFieldNode } from "./ast";
@@ -20,7 +21,7 @@ export interface ExplorerContextValue {
 
 export const ExplorerContext = createContext<ExplorerContextValue>(null as any);
 
-export const ExplorerProvider: FC = ({ children }) => {
+export const ExplorerProvider: FC<PropsWithChildren>  = ({ children }) => {
   const { addMessageHandler } = useDevtoolsContext();
   const [operations, setOperations] = useState<
     ExplorerContextValue["operations"]

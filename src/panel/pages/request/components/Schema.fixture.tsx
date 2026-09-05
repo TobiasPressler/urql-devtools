@@ -1,4 +1,4 @@
-import React, { FC, ContextType, useState, useMemo } from "react";
+import React, { PropsWithChildren, ContextType, useState, useMemo } from "react";
 import { buildSchema } from "graphql";
 import { RequestContext } from "../../../context";
 import { Schema } from "./Schema";
@@ -126,7 +126,7 @@ type User {
  
 `);
 
-const RequestProviderMock: FC<Partial<ContextType<typeof RequestContext>>> = ({
+const RequestProviderMock: PropsWithChildren<Partial<ContextType<typeof RequestContext>>> = ({
   children,
   ...value
 }) => {

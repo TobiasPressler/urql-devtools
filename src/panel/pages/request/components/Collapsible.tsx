@@ -1,4 +1,4 @@
-import React, { FC, ReactChild } from "react";
+import React, { PropsWithChildren, ReactChild } from "react";
 import styled from "styled-components";
 import { Arrow } from "../../../components";
 
@@ -9,7 +9,7 @@ interface CollapsibleProps {
   onClick: () => void;
 }
 
-export const Collapsible: FC<CollapsibleProps> = ({
+export const Collapsible: PropsWithChildren<CollapsibleProps> = ({
   title,
   isActive,
   children,

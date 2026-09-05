@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { PropsWithChildren } from "react";
 import { GraphQLNamedType } from "graphql";
 import styled from "styled-components";
 import { faHome, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -9,7 +9,7 @@ interface TopBarProps {
   stack: GraphQLNamedType[] | [];
 }
 
-export const TopBar: FC<TopBarProps> = ({ setStack, stack, children }) => {
+export const TopBar: PropsWithChildren<TopBarProps> = ({ setStack, stack, children }) => {
   const prevType = stack[stack.length - 2];
 
   return (

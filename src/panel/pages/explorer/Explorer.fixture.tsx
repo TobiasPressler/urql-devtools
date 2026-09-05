@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { PropsWithChildren, useMemo } from "react";
 import { gql } from "@urql/core";
 import { ExchangeDebugEventMessage } from "@urql/devtools";
 import {
@@ -75,7 +75,7 @@ export const defaultEvents: ExchangeDebugEventMessage[] = [
   },
 ];
 
-const DevtoolsContextMock: FC<
+const DevtoolsContextMock: PropsWithChildren<
   { events?: typeof defaultEvents } & Partial<DevtoolsContextType>
 > = ({ children, events = defaultEvents, ...val }) => {
   const value = useMemo<DevtoolsContextType>(

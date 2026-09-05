@@ -1,6 +1,6 @@
 import "./App.css";
 import "./prism";
-import React, { FC } from "react";
+import React, { PropsWithChildren } from "react";
 import { MemoryRouter } from "react-router";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { useSelect } from "react-cosmos/fixture";
@@ -29,7 +29,7 @@ const FixtureStyle = createGlobalStyle`
   }
 `;
 
-export const ThemeDecorator: FC = ({ children, ...props }) => {
+export const ThemeDecorator: PropsWithChildren = ({ children, ...props }) => {
   const [theme] = useSelect("theme", {
     options: ["dark", "light"],
   });
@@ -42,7 +42,7 @@ export const ThemeDecorator: FC = ({ children, ...props }) => {
   );
 };
 
-export const DevtoolsDecorator: FC = (props) => (
+export const DevtoolsDecorator: PropsWithChildren = (props) => (
   <DevtoolsContext.Provider
     {...props}
     value={{
@@ -60,7 +60,7 @@ export const DevtoolsDecorator: FC = (props) => (
   />
 );
 
-const Decorator: FC = ({ children }) => (
+const Decorator: PropsWithChildren = ({ children }) => (
   <ThemeDecorator>
     <MemoryRouter>
       <DevtoolsDecorator>{children}</DevtoolsDecorator>

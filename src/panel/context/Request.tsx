@@ -1,11 +1,12 @@
 import React, {
   createContext,
-  FC,
+  PropsWithChildren,
   useState,
   useEffect,
   useCallback,
   useMemo,
   useContext,
+  FC,
 } from "react";
 import {
   visit,
@@ -14,8 +15,8 @@ import {
   extendSchema,
   GraphQLSchema,
   getIntrospectionQuery,
+  parse,
 } from "graphql";
-import { gql } from "@urql/core";
 import { useDevtoolsContext } from "./Devtools";
 
 interface RequestContextValue {
@@ -32,7 +33,7 @@ export const RequestContext = createContext<RequestContextValue>(null as any);
 
 export const useRequest = (): RequestContextValue => useContext(RequestContext);
 
-export const RequestProvider: FC = ({ children }) => {
+export const RequestProvider: FC<PropsWithChildren>  = ({ children }) => {
   const { sendMessage, addMessageHandler } = useDevtoolsContext();
   const [state, setState] = useState<{
     fetching: boolean;
@@ -154,9 +155,7 @@ const appendPopulateDirective = (schema: GraphQLSchema): GraphQLSchema => {
   try {
     return extendSchema(
       schema,
-      gql`
-        directive @populate on FIELD
-      `
+      parse(`directive @populate on FIELD`)
     );
   } catch (err: any) {
     if (

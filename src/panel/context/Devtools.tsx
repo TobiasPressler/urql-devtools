@@ -3,11 +3,12 @@ import semver from "semver";
 import React, {
   createContext,
   useEffect,
-  FC,
+  PropsWithChildren,
   useRef,
   useCallback,
   useState,
   useContext,
+  FC,
 } from "react";
 import { createConnection } from "../util";
 
@@ -35,20 +36,51 @@ export const DevtoolsContext = createContext<DevtoolsContextType>(null as any);
 export const useDevtoolsContext = (): DevtoolsContextType =>
   useContext(DevtoolsContext);
 
-export const DevtoolsProvider: FC = ({ children }) => {
+export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [client, setClient] = useState<DevtoolsContextType["client"]>({
     connected: false,
   });
-  const connection = useRef(createConnection());
-
-  /** Collection of operation events */
+  const connectionRef = useRef<ReturnType<typeof createConnection> | null>(
+    null
+  );
   const messageHandlers = useRef<
     Record<string, (msg: ExchangeMessage) => void>
   >({});
 
+  const getConnection = useCallback(() => {
+    if (connectionRef.current) {
+      return connectionRef.current;
+    }
+    const conn = createConnection();
+    connectionRef.current = conn;
+
+    if (process.env.BUILD_ENV === "extension") {
+      (conn as chrome.runtime.Port).onDisconnect.addListener(() => {
+        connectionRef.current = null;
+        setClient({ connected: false });
+      });
+    }
+
+    conn.onMessage.addListener((msg: ExchangeMessage | DevtoolsMessage) => {
+      if (msg?.source !== "exchange") {
+        return;
+      }
+      Object.values(messageHandlers.current).forEach((h) => h(msg));
+    });
+
+    return conn;
+  }, []);
+
   const sendMessage = useCallback<DevtoolsContextType["sendMessage"]>(
-    (msg) => connection.current.postMessage(msg),
-    []
+    (msg) => {
+      try {
+        getConnection().postMessage(msg);
+      } catch {
+        // Port disconnected — force reconnection on next message
+        connectionRef.current = null;
+      }
+    },
+    [getConnection]
   );
 
   const addMessageHandler = useCallback<
@@ -64,7 +96,7 @@ export const DevtoolsProvider: FC = ({ children }) => {
 
   // Send init message on mount
   useEffect(() => {
-    connection.current.postMessage({
+    getConnection().postMessage({
       type: "connection-init",
       source: "devtools",
       tabId:
@@ -73,21 +105,7 @@ export const DevtoolsProvider: FC = ({ children }) => {
           : NaN,
       version: process.env.PKG_VERSION,
     });
-  }, []);
-
-  // Forward exchange messages to subscribers
-  useEffect(() => {
-    const handleMessage = (msg: ExchangeMessage | DevtoolsMessage) => {
-      if (msg?.source !== "exchange") {
-        return;
-      }
-
-      return Object.values(messageHandlers.current).forEach((h) => h(msg));
-    };
-
-    connection.current.onMessage.addListener(handleMessage);
-    return () => connection.current.onMessage.removeListener(handleMessage);
-  }, []);
+  }, [getConnection]);
 
   // Listen for client connect
   useEffect(() => {
@@ -104,7 +122,7 @@ export const DevtoolsProvider: FC = ({ children }) => {
       }
 
       if (message.type === "connection-init") {
-        connection.current.postMessage({
+        getConnection().postMessage({
           type: "connection-acknowledge",
           source: "devtools",
           version: process.env.PKG_VERSION,

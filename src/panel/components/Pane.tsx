@@ -1,12 +1,13 @@
 import { rem } from "polished";
 import React, {
-  FC,
+  PropsWithChildren,
   useCallback,
   useState,
   useMemo,
   MouseEventHandler,
   ComponentProps,
   useRef,
+  FC,
 } from "react";
 import styled from "styled-components";
 import { useOrientationWatcher } from "../hooks";
@@ -17,7 +18,7 @@ interface OverrideProps {
   "data-snapshot"?: boolean;
 }
 
-const PaneRoot: FC<ComponentProps<typeof PaneContainer> & OverrideProps> = ({
+const PaneRoot: FC<PropsWithChildren<ComponentProps<typeof PaneContainer> & OverrideProps>> = ({
   children,
   forcedOrientation,
   initSize,

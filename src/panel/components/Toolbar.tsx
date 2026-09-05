@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC } from "react";
+import React, { ComponentProps, FC, PropsWithChildren } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -13,9 +13,9 @@ type ToolbarItem = {
   disabled?: boolean;
 };
 
-export const Toolbar: FC<
+export const Toolbar: FC<PropsWithChildren<
   { items: ToolbarItem[] } & ComponentProps<typeof Container>
-> = ({ items, children, ...props }) => (
+>> = ({ items, children, ...props }) => (
   <Container {...props}>
     {items.map((item, index) => (
       <Item

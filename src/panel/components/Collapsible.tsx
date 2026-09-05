@@ -4,7 +4,7 @@ export const Collapsible = forwardRef<
   HTMLDivElement,
   JSX.IntrinsicElements["div"] & { collapsed: boolean }
 >(function Collapsible({ collapsed, ...props }, forwardedRef) {
-  const ref = useRef<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
 
   const handleRef = useCallback(
     (e) => {

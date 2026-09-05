@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { FC } from "react";
-import { HashRouter, Route, Redirect } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import {
   Disconnected,
@@ -52,16 +52,33 @@ export const AppRoutes: FC = () => {
           { link: "/request", label: "Request" },
         ]}
       />
-      <TimelineProvider>
-        <Route path="/events" component={Timeline} />
-      </TimelineProvider>
-      <RequestProvider>
-        <Route path="/request" component={Request} />
-      </RequestProvider>
-      <ExplorerProvider>
-        <Route path="/explorer" exact component={Explorer} />
-      </ExplorerProvider>
-      <Route path="/" exact component={() => <Redirect to="/explorer" />} />
+      <Routes>
+        <Route
+          path="/events"
+          element={
+            <TimelineProvider>
+              <Timeline />
+            </TimelineProvider>
+          }
+        />
+        <Route
+          path="/request"
+          element={
+            <RequestProvider>
+              <Request />
+            </RequestProvider>
+          }
+        />
+        <Route
+          path="/explorer"
+          element={
+            <ExplorerProvider>
+              <Explorer />
+            </ExplorerProvider>
+          }
+        />
+        <Route path="/" element={<Navigate to="/explorer" replace />} />
+      </Routes>
     </HashRouter>
   );
 };

@@ -1,5 +1,6 @@
 import React, {
   FC,
+  PropsWithChildren,
   useMemo,
   useState,
   ComponentProps,
@@ -78,7 +79,7 @@ export const TimelineEvent: FC<
   );
 };
 
-export const TimelineEventGroup: FC<ComponentProps<typeof Svg>> = ({
+export const TimelineEventGroup: FC<PropsWithChildren<ComponentProps<typeof Svg>>> = ({
   children,
   ...props
 }) => {

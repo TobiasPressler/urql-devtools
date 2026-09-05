@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React, { PropsWithChildren } from "react";
 import { DevtoolsContext } from "../../context";
 import { Mismatch } from "./Mismatch";
 
-const MockProvider: FC = (props) => (
+const MockProvider: PropsWithChildren = (props) => (
   <DevtoolsContext.Provider
     {...props}
     value={

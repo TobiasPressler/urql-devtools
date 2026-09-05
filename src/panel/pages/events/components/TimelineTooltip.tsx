@@ -5,13 +5,14 @@ import React, {
   useRef,
   useMemo,
   useCallback,
-  FC,
+  PropsWithChildren,
   ComponentProps,
+  FC,
 } from "react";
 import styled from "styled-components";
 import { Portal } from "../../../components";
 
-export const TimelineTooltip: FC<JSX.IntrinsicElements["div"]> = ({
+export const TimelineTooltip: FC<PropsWithChildren<JSX.IntrinsicElements["div"]>> = ({
   children,
   style: styleProp,
   ...props
