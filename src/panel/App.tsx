@@ -1,6 +1,7 @@
 import "./App.css";
 import React, { FC } from "react";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, useLocation, Navigate } from "react-router-dom";
+import { Activity } from "react";
 import { ThemeProvider } from "styled-components";
 import {
   Disconnected,
@@ -32,6 +33,31 @@ export const App: FC = () => (
   </ThemeProvider>
 );
 
+const RoutedContent: FC = () => {
+  const { pathname } = useLocation();
+
+  return (
+    <>
+      <Activity mode={pathname === "/events" ? "visible" : "hidden"}>
+        <TimelineProvider>
+          <Timeline />
+        </TimelineProvider>
+      </Activity>
+      <Activity mode={pathname === "/request" ? "visible" : "hidden"}>
+        <RequestProvider>
+          <Request />
+        </RequestProvider>
+      </Activity>
+      <Activity mode={pathname === "/explorer" || pathname === "/" ? "visible" : "hidden"}>
+        <ExplorerProvider>
+          <Explorer />
+        </ExplorerProvider>
+      </Activity>
+      {pathname === "/" && <Navigate to="/explorer" replace />}
+    </>
+  );
+};
+
 export const AppRoutes: FC = () => {
   const { client } = useDevtoolsContext();
 
@@ -52,33 +78,7 @@ export const AppRoutes: FC = () => {
           { link: "/request", label: "Request" },
         ]}
       />
-      <Routes>
-        <Route
-          path="/events"
-          element={
-            <TimelineProvider>
-              <Timeline />
-            </TimelineProvider>
-          }
-        />
-        <Route
-          path="/request"
-          element={
-            <RequestProvider>
-              <Request />
-            </RequestProvider>
-          }
-        />
-        <Route
-          path="/explorer"
-          element={
-            <ExplorerProvider>
-              <Explorer />
-            </ExplorerProvider>
-          }
-        />
-        <Route path="/" element={<Navigate to="/explorer" replace />} />
-      </Routes>
+      <RoutedContent />
     </HashRouter>
   );
 };
