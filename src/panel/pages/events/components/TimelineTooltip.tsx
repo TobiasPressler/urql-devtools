@@ -126,7 +126,9 @@ export const useTooltip = () => {
     }
 
     const mObserver = new MutationObserver(calculateTooltipPosition);
-    const rObserver = new ResizeObserver(calculateTooltipPosition);
+    const rObserver = new ResizeObserver(() =>
+      requestAnimationFrame(calculateTooltipPosition)
+    );
     mObserver.observe(ref.current, {
       attributes: true,
       childList: true,

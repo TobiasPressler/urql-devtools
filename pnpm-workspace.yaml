@@ -3,6 +3,7 @@ allowBuilds:
   dtrace-provider: true
   electron: true
   es5-ext: true
+  esbuild: true
   fsevents: true
   husky-v4: true
   puppeteer: true
