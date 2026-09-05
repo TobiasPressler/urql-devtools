@@ -36,8 +36,9 @@
   },
   "bin": "./scripts/cli.js",
   "engines": {
-    "node": ">= 14"
+    "node": ">= 20"
   },
+  "packageManager": "pnpm@11.24.0",
   "husky": {
     "hooks": {
       "pre-commit": "pnpm lint-staged"
