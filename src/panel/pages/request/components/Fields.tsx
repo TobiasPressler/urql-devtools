@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from "react";
+import { FC, Fragment } from "react";
 import {
   isInterfaceType,
   isObjectType,
@@ -35,10 +35,12 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
   }
 
   const isDeprecated = (
-    field: GraphQLField<any, any, any> | GraphQLEnumValue
+    field: GraphQLField<any, any, any> | GraphQLEnumValue,
   ) =>
     (field as any).isDeprecated ? (
-      <code className={deprecated}>{`Deprecated: ${field.deprecationReason}`}</code>
+      <code
+        className={deprecated}
+      >{`Deprecated: ${field.deprecationReason}`}</code>
     ) : null;
 
   const getDefaultValue = (field: GraphQLInputField | GraphQLArgument) =>
@@ -58,10 +60,13 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
       | GraphQLArgument
       | GraphQLInputField
       | GraphQLEnumValue
-      | GraphQLObjectType
+      | GraphQLObjectType,
   ) =>
     field.description ? (
-      <code data-css-description className={description}>{`"${field.description}"`}</code>
+      <code
+        data-css-description
+        className={description}
+      >{`"${field.description}"`}</code>
     ) : null;
 
   if (isObjectType(node) || isInterfaceType(node)) {
@@ -73,7 +78,7 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
         {keys.map((field, i) => {
           const args = fields[field].args;
           const hasArgumentLevelDescription = args.some(
-            (arg) => arg.description
+            (arg) => arg.description,
           );
           const hasFieldLevelDescription = !!fields[field].description;
 
@@ -92,7 +97,10 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
               </span>
               {args.length > 0 ? (
                 <>
-                  <div data-multiline={`${hasArgumentLevelDescription}`} className={argWrapper}>
+                  <div
+                    data-multiline={`${hasArgumentLevelDescription}`}
+                    className={argWrapper}
+                  >
                     {args.map((arg, idx) => (
                       <Fragment key={idx}>
                         {getDescription(arg)}
@@ -101,7 +109,9 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
                           <span data-content=":" className={separator} />
                           <Type type={arg.type} setType={setType} />
                           {getDefaultValue(arg)}
-                          {idx !== args.length - 1 && <span data-content="," className={separator} />}
+                          {idx !== args.length - 1 && (
+                            <span data-content="," className={separator} />
+                          )}
                         </code>
                       </Fragment>
                     ))}

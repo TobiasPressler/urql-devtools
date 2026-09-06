@@ -2,7 +2,6 @@ jest.mock("../hooks", () => ({
   useOrientationWatcher: jest.fn(),
 }));
 
-import React from "react";
 import { shallow } from "enzyme";
 import { useOrientationWatcher } from "../hooks";
 import { Pane } from "./Pane";
@@ -47,10 +46,16 @@ describe("on mouse down", () => {
       .simulate("mouseDown", { button: 0, preventDefault: jest.fn() });
   });
   it("listens for mouse up events", () => {
-    expect(addEventListener).toHaveBeenCalledWith("mouseup", expect.any(Function));
+    expect(addEventListener).toHaveBeenCalledWith(
+      "mouseup",
+      expect.any(Function),
+    );
   });
 
   it("listens for mouse move events", () => {
-    expect(addEventListener).toHaveBeenCalledWith("mousemove", expect.any(Function));
+    expect(addEventListener).toHaveBeenCalledWith(
+      "mousemove",
+      expect.any(Function),
+    );
   });
 });

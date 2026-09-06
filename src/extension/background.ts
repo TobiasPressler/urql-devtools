@@ -50,7 +50,7 @@ const handleContentScriptConnection = (port: chrome.runtime.Port) => {
           tabId,
           path: "/assets/icon-disabled-32.png",
         },
-        () => true
+        () => true,
       );
     });
   }
@@ -68,7 +68,7 @@ const handleDevtoolsPanelConnection = (port: chrome.runtime.Port) => {
     // tabId is required when working with chrome extension
     if (msg.tabId === undefined) {
       console.error(
-        "Recieved devtools panel connection but no tabId was specified."
+        "Recieved devtools panel connection but no tabId was specified.",
       );
       return;
     }

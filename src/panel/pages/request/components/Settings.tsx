@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import { FC, useCallback } from "react";
 import prettier from "prettier/standalone";
 import parserGraphql from "prettier/parser-graphql";
 import {

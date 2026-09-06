@@ -1,5 +1,12 @@
 import { style, globalStyle } from "@vanilla-extract/css";
-import { colorDividerBase, colorTextDimmedBase, fontSizeBodyL, lineHeightBodyL, space2, space3 } from "../../../theme.css";
+import {
+  colorDividerBase,
+  colorTextDimmedBase,
+  fontSizeBodyL,
+  lineHeightBodyL,
+  space2,
+  space3,
+} from "../../../theme.css";
 
 export const list = style({
   margin: 0,

@@ -38,7 +38,7 @@ export default {
           code={JSON.stringify(
             { number: 1234, string: "Hello", null: null, boolean: true },
             null,
-            2
+            2,
           )}
           language="javascript"
         />

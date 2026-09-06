@@ -1,5 +1,14 @@
 import { style, globalStyle } from "@vanilla-extract/css";
-import { colorCanvasElevated05, colorCanvasElevated10, colorCodeblockBg, colorTextBase, fontSizeBodyM, radiiM, space2, space3 } from "../theme.css";
+import {
+  colorCanvasElevated05,
+  colorCanvasElevated10,
+  colorCodeblockBg,
+  colorTextBase,
+  fontSizeBodyM,
+  radiiM,
+  space2,
+  space3,
+} from "../theme.css";
 
 export const styledInlineBlock = style({
   display: "inline-flex",

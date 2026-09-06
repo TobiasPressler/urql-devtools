@@ -10,7 +10,7 @@ type Maybe<T> = null | undefined | T;
 /** Evaluates a fields arguments taking vars into account */
 export const getFieldArguments = (
   node: FieldNode,
-  vars: Operation["variables"]
+  vars: Operation["variables"],
 ): Record<string, unknown> | undefined => {
   if (node.arguments === undefined || node.arguments.length === 0) {
     return;
@@ -21,22 +21,22 @@ export const getFieldArguments = (
       ...p,
       [arg.name.value]: valueFromASTUntyped(arg.value, vars as any),
     }),
-    {}
+    {},
   ) as Record<string, unknown>;
 };
 
 /** Returns a normalized form of variables with defaulted values */
 export const getNormalizedVariables = (
   variableDefinitions: OperationDefinitionNode["variableDefinitions"] = [],
-  variables?: Maybe<Record<string, any>>
+  variables?: Maybe<Record<string, any>>,
 ): Record<string, unknown> | undefined =>
   variableDefinitions.reduce<Operation["variables"]>(
     (normalized, definition) => ({
       ...normalized,
       [definition.variable.name.value]: valueFromASTUntyped(
         definition.variable,
-        variables
+        variables,
       ),
     }),
-    {}
+    {},
   ) as Record<string, unknown>;

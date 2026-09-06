@@ -1,4 +1,9 @@
-import React, { PropsWithChildren, ContextType, useState, useMemo } from "react";
+import React, {
+  PropsWithChildren,
+  ContextType,
+  useState,
+  useMemo,
+} from "react";
 import { buildSchema } from "graphql";
 import { RequestContext } from "../../../context";
 import { Schema } from "./Schema";
@@ -126,10 +131,9 @@ type User {
  
 `);
 
-const RequestProviderMock: PropsWithChildren<Partial<ContextType<typeof RequestContext>>> = ({
-  children,
-  ...value
-}) => {
+const RequestProviderMock: PropsWithChildren<
+  Partial<ContextType<typeof RequestContext>>
+> = ({ children, ...value }) => {
   const [query, setQuery] = useState("");
 
   const state = useMemo(
@@ -143,7 +147,7 @@ const RequestProviderMock: PropsWithChildren<Partial<ContextType<typeof RequestC
       schema,
       ...value,
     }),
-    [value]
+    [value],
   );
 
   return <RequestContext.Provider children={children} value={state} />;

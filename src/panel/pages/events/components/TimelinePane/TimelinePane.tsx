@@ -21,7 +21,10 @@ export const TimelinePane: FC<
   ({ event: DebugEvent } | { source?: Operation }) &
     React.HTMLAttributes<HTMLDivElement>
 > = (allProps) => {
-  const { event, source, ...props } = allProps as { event?: DebugEvent; source?: Operation } & React.HTMLAttributes<HTMLDivElement>;
+  const { event, source, ...props } = allProps as {
+    event?: DebugEvent;
+    source?: Operation;
+  } & React.HTMLAttributes<HTMLDivElement>;
   const content = useMemo(() => {
     if (source) {
       return (
@@ -59,13 +62,14 @@ const EventSection: FC<{ event: DebugEvent & { duration?: number } }> = ({
 }) => {
   const { startTime } = useTimelineContext();
 
-  const timestamp = useMemo(() => `${event.timestamp - startTime} ms`, [
-    startTime,
-  ]);
+  const timestamp = useMemo(
+    () => `${event.timestamp - startTime} ms`,
+    [startTime],
+  );
 
   const metadata = useMemo(
     () => event.data && JSONtoJavascriptString(event.data),
-    [event.data]
+    [event.data],
   );
 
   return (
@@ -134,7 +138,7 @@ const SourceSection: FC<{ operation: Operation }> = ({ operation }) => (
         <CodeHighlight
           language={"javascript"}
           code={JSONtoJavascriptString(
-            (operation.variables || {}) as Record<string, unknown>
+            (operation.variables || {}) as Record<string, unknown>,
           )}
         />
       </Pane.Item>

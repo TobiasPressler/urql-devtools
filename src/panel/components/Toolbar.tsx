@@ -12,9 +12,9 @@ type ToolbarItem = {
   disabled?: boolean;
 };
 
-export const Toolbar: FC<PropsWithChildren<
-  { items: ToolbarItem[] } & HTMLAttributes<HTMLDivElement>
->> = ({ items, children, ...props }) => (
+export const Toolbar: FC<
+  PropsWithChildren<{ items: ToolbarItem[] } & HTMLAttributes<HTMLDivElement>>
+> = ({ items, children, ...props }) => (
   <div {...props} className={`${container} ${props.className || ""}`}>
     {items.map((itemData, index) => (
       <button
@@ -25,7 +25,7 @@ export const Toolbar: FC<PropsWithChildren<
         disabled={itemData.disabled}
         className={`${itemData.active ? itemActive : item}`}
       >
-        <FontAwesomeIcon icon={itemData.icon}/>
+        <FontAwesomeIcon icon={itemData.icon} />
       </button>
     ))}
     {children}

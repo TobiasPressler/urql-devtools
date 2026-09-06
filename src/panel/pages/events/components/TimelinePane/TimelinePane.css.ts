@@ -1,5 +1,13 @@
 import { style, globalStyle } from "@vanilla-extract/css";
-import { colorCanvasBase, colorDividerBase, colorTextDimmedBase, fontSizeBodyM, lineHeightBodyM, space2, space6 } from "../../../../theme.css";
+import {
+  colorCanvasBase,
+  colorDividerBase,
+  colorTextDimmedBase,
+  fontSizeBodyM,
+  lineHeightBodyM,
+  space2,
+  space6,
+} from "../../../../theme.css";
 
 export const container = style({
   backgroundColor: `${colorCanvasBase}`,

@@ -1,5 +1,9 @@
 import { globalStyle, style } from "@vanilla-extract/css";
-import { colorCanvasBase, colorTextBase, colorTextDimmedBase } from "../../theme.css";
+import {
+  colorCanvasBase,
+  colorTextBase,
+  colorTextDimmedBase,
+} from "../../theme.css";
 
 globalStyle("body", {
   margin: 0,

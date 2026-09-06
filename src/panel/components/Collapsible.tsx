@@ -18,7 +18,7 @@ export const Collapsible = forwardRef<
         forwardedRef.current = e;
       }
     },
-    [ref]
+    [ref],
   );
 
   const maxHeight = useMemo(() => {

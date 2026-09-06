@@ -1,4 +1,4 @@
-import React, {
+import {
   FC,
   useMemo,
   useCallback,
@@ -37,9 +37,9 @@ export const Search: FC<SearchProps> = ({ typeMap, setType }) => {
       (typeKeys = typeKeys.filter((key) =>
         searchValue.length === 1
           ? key.toLowerCase().startsWith(searchValue.toLowerCase())
-          : key.toLowerCase().includes(searchValue.toLowerCase())
+          : key.toLowerCase().includes(searchValue.toLowerCase()),
       )),
-    [searchValue]
+    [searchValue],
   );
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export const Search: FC<SearchProps> = ({ typeMap, setType }) => {
     (e: ChangeEvent<HTMLInputElement>) => {
       setSearchValue(e.target.value || "");
     },
-    [setSearchValue]
+    [setSearchValue],
   );
 
   const handleTypeSelect = useCallback(
@@ -78,7 +78,7 @@ export const Search: FC<SearchProps> = ({ typeMap, setType }) => {
       setType(type);
       setListOpen(false);
     },
-    [setListOpen, setType]
+    [setListOpen, setType],
   );
 
   return (
@@ -97,7 +97,10 @@ export const Search: FC<SearchProps> = ({ typeMap, setType }) => {
         <ul className={list}>
           {results.map((res, i) => (
             <li key={i} className={listItem}>
-              <button onClick={() => handleTypeSelect(typeMap[res])} className={textButton}>
+              <button
+                onClick={() => handleTypeSelect(typeMap[res])}
+                className={textButton}
+              >
                 <HighlightMatch name={typeMap[res].name} term={searchValue} />
               </button>
             </li>

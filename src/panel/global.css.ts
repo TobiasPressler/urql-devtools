@@ -60,9 +60,12 @@ globalStyle(".CodeMirror-hints.default > .CodeMirror-hint", {
   color: colorTextBase,
 });
 
-globalStyle(".CodeMirror-hints.default > .CodeMirror-hint.CodeMirror-hint-active", {
-  background: colorTooltipActive,
-});
+globalStyle(
+  ".CodeMirror-hints.default > .CodeMirror-hint.CodeMirror-hint-active",
+  {
+    background: colorTooltipActive,
+  },
+);
 
 globalStyle(".CodeMirror-matchingbracket", {
   textDecoration: "underline",
@@ -81,14 +84,14 @@ globalStyle(
   ".CodeMirror-line::selection, .CodeMirror-line>span::selection, .CodeMirror-line>span>span::selection",
   {
     background: `${colorCodeblockBg} !important`,
-  }
+  },
 );
 
 globalStyle(
   ".CodeMirror-line::-moz-selection, .CodeMirror-line>span::-moz-selection, .CodeMirror-line>span>span::-moz-selection",
   {
     background: `${colorCodeblockBg} !important`,
-  }
+  },
 );
 
 // Syntax highlighting — CodeMirror + Prism
@@ -107,79 +110,91 @@ globalStyle(
     // !important: collides with CodeMirror's own baked-in "default theme"
     // rule for the same `.cm-s-default .cm-comment` selector.
     color: `${colorSyntaxComment} !important`,
-  }
+  },
 );
 
 globalStyle(
   '.cm-s-default .token.punctuation, .cm-s-default .cm-punctuation, [class*="language-"] .token.punctuation, [class*="language-"] .cm-punctuation',
   {
     color: colorSyntaxPunctuation,
-  }
+  },
 );
 
 globalStyle(
   '.cm-s-default .token.number, .cm-s-default .cm-number, [class*="language-"] .token.number, [class*="language-"] .cm-number',
   {
     color: `${colorSyntaxNumber} !important`,
-  }
+  },
 );
 
 globalStyle(
   '.cm-s-default .token.string, .cm-s-default .cm-string, .cm-s-default .cm-string-2, [class*="language-"] .token.string, [class*="language-"] .cm-string, [class*="language-"] .cm-string-2',
   {
     color: `${colorSyntaxString} !important`,
-  }
+  },
 );
 
-globalStyle('.cm-s-default .token.operator, [class*="language-"] .token.operator', {
-  color: colorSyntaxOperator,
-});
+globalStyle(
+  '.cm-s-default .token.operator, [class*="language-"] .token.operator',
+  {
+    color: colorSyntaxOperator,
+  },
+);
 
 globalStyle(
   '.cm-s-default .token.keyword, .cm-s-default .cm-keyword, [class*="language-"] .token.keyword, [class*="language-"] .cm-keyword',
   {
     color: `${colorSyntaxKeyword} !important`,
-  }
+  },
 );
 
-globalStyle('.cm-s-default .token.function, [class*="language-"] .token.function', {
-  color: colorSyntaxFunction,
-});
+globalStyle(
+  '.cm-s-default .token.function, [class*="language-"] .token.function',
+  {
+    color: colorSyntaxFunction,
+  },
+);
 
-globalStyle('.cm-s-default .token.constant, [class*="language-"] .token.constant', {
-  color: colorSyntaxConstant,
-});
+globalStyle(
+  '.cm-s-default .token.constant, [class*="language-"] .token.constant',
+  {
+    color: colorSyntaxConstant,
+  },
+);
 
 globalStyle(
   '.cm-s-default .token.class-name, .cm-s-default .cm-def, [class*="language-"] .token.class-name, [class*="language-"] .cm-def',
   {
     color: `${colorSyntaxClassName} !important`,
-  }
+  },
 );
 
-globalStyle('.cm-s-default .token.boolean, [class*="language-"] .token.boolean', {
-  color: colorSyntaxBoolean,
-});
+globalStyle(
+  '.cm-s-default .token.boolean, [class*="language-"] .token.boolean',
+  {
+    color: colorSyntaxBoolean,
+  },
+);
 
 globalStyle(
   '.cm-s-default .token.property, .cm-s-default .cm-property, [class*="language-"] .token.property, [class*="language-"] .cm-property',
   {
     color: colorSyntaxProperty,
-  }
+  },
 );
 
 globalStyle(
   '.cm-s-default .token.variable, .cm-s-default .cm-variable, [class*="language-"] .token.variable, [class*="language-"] .cm-variable',
   {
     color: colorSyntaxVariable,
-  }
+  },
 );
 
 globalStyle(
   '.cm-s-default .token.attr-name, .cm-s-default .cm-attribute, [class*="language-"] .token.attr-name, [class*="language-"] .cm-attribute',
   {
     color: `${colorSyntaxAttrName} !important`,
-  }
+  },
 );
 
 globalStyle('.cm-s-default .cm-atom, [class*="language-"] .cm-atom', {
@@ -194,9 +209,12 @@ globalStyle('.cm-s-default .cm-meta, [class*="language-"] .cm-meta', {
   color: `${colorSyntaxMeta} !important`,
 });
 
-globalStyle('.cm-s-default .cm-invalidchar, [class*="language-"] .cm-invalidchar', {
-  color: colorSyntaxBase,
-});
+globalStyle(
+  '.cm-s-default .cm-invalidchar, [class*="language-"] .cm-invalidchar',
+  {
+    color: colorSyntaxBase,
+  },
+);
 
 // Prism code blocks
 // Modified version of - https://github.com/PrismJS/prism-themes/blob/master/themes/prism-material-dark.css

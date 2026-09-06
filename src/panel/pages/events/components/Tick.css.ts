@@ -1,5 +1,10 @@
 import { style } from "@vanilla-extract/css";
-import { colorDividerBase, colorTextDimmedBase, fontSizeBodyM, space6 } from "../../../theme.css";
+import {
+  colorDividerBase,
+  colorTextDimmedBase,
+  fontSizeBodyM,
+  space6,
+} from "../../../theme.css";
 
 export const tick = style({
   position: "absolute",

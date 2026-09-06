@@ -7,9 +7,6 @@ import React, {
   useRef,
 } from "react";
 import { animated } from "react-spring";
-
-const AnimatedSpan = animated.span as any;
-const AnimatedDiv = animated.div as any;
 import { ParsedFieldNode } from "../../../context/Explorer/ast";
 import { ExplorerContext } from "../../../context";
 import { useFlash } from "../hooks";
@@ -26,6 +23,9 @@ import {
   typename,
 } from "./ListItem.css";
 
+const AnimatedSpan = animated.span as any;
+const AnimatedDiv = animated.div as any;
+
 interface ListItemProps {
   node: ParsedFieldNode;
   depth?: number;
@@ -34,12 +34,11 @@ interface ListItemProps {
 export const ListItem: FC<ListItemProps> = ({ node, depth = 0 }) => {
   const previousNode = useRef(node);
   const [flashStyle, flash] = useFlash();
-  const { expandedNodes, setExpandedNodes, setFocusedNode } = useContext(
-    ExplorerContext
-  );
+  const { expandedNodes, setExpandedNodes, setFocusedNode } =
+    useContext(ExplorerContext);
   const isExpanded = useMemo(
     () => expandedNodes.some((n) => n._id === node._id),
-    [node, expandedNodes]
+    [node, expandedNodes],
   );
 
   useEffect(() => {
@@ -62,8 +61,8 @@ export const ListItem: FC<ListItemProps> = ({ node, depth = 0 }) => {
       setExpandedNodes((n) =>
         n.slice(
           0,
-          n.findIndex((n) => n._id === node._id)
-        )
+          n.findIndex((n) => n._id === node._id),
+        ),
       );
       setFocusedNode(undefined);
       return;
@@ -110,7 +109,11 @@ export const ListItem: FC<ListItemProps> = ({ node, depth = 0 }) => {
   if (node.args) {
     return (
       <li role="treeitem" className={itemWithoutChildren}>
-        <AnimatedDiv style={flashStyle} aria-expanded={isExpanded} className={outlineContainer}>
+        <AnimatedDiv
+          style={flashStyle}
+          aria-expanded={isExpanded}
+          className={outlineContainer}
+        >
           {contents}
         </AnimatedDiv>
       </li>

@@ -1,5 +1,15 @@
 import { style } from "@vanilla-extract/css";
-import { colorDividerBase, colorPrimaryActive, colorPrimaryBase, colorPrimaryHover, colorTextDimmedActive, colorTextDimmedBase, colorTextDimmedHover, fontSizeBodyL, lineHeightBodyL } from "../theme.css";
+import {
+  colorDividerBase,
+  colorPrimaryActive,
+  colorPrimaryBase,
+  colorPrimaryHover,
+  colorTextDimmedActive,
+  colorTextDimmedBase,
+  colorTextDimmedHover,
+  fontSizeBodyL,
+  lineHeightBodyL,
+} from "../theme.css";
 
 export const container = style({
   display: "flex",

@@ -1,5 +1,15 @@
 import { style, styleVariants, globalStyle } from "@vanilla-extract/css";
-import { colorCanvasActive, colorCanvasBase, colorCanvasHover, colorDividerBase, colorPrimaryBase, colorTextBase, colorTextDimmedBase, fontSizeBodyM, space3 } from "../theme.css";
+import {
+  colorCanvasActive,
+  colorCanvasBase,
+  colorCanvasHover,
+  colorDividerBase,
+  colorPrimaryBase,
+  colorTextBase,
+  colorTextDimmedBase,
+  fontSizeBodyM,
+  space3,
+} from "../theme.css";
 
 export const container = style({
   position: "fixed",

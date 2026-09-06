@@ -6,7 +6,7 @@ import { debug } from "../util";
 let connection: chrome.runtime.Port | undefined;
 
 /** Buffer messages while reconnecting */
-let pendingMessages: ExchangeMessage[] = [];
+const pendingMessages: ExchangeMessage[] = [];
 
 /** Connect (or reconnect) to the background script. */
 const connect = () => {

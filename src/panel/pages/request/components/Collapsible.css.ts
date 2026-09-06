@@ -1,5 +1,13 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasActive, colorCanvasHover, colorDividerBase, colorTextDimmedBase, fontSizeBodyM, lineHeightBodyM, space2 } from "../../../theme.css";
+import {
+  colorCanvasActive,
+  colorCanvasHover,
+  colorDividerBase,
+  colorTextDimmedBase,
+  fontSizeBodyM,
+  lineHeightBodyM,
+  space2,
+} from "../../../theme.css";
 
 export const collapsibleHeader = style({
   display: "flex",

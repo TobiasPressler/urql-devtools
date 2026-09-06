@@ -1,4 +1,4 @@
-import React, { FC, useMemo, ComponentProps, cloneElement } from "react";
+import React, { FC, useMemo, cloneElement } from "react";
 import { DebugEvent } from "@urql/core";
 import { useTimelineContext } from "../../../context";
 import { TimelineEvent, TimelineEventGroup } from "./TimelineEvent";
@@ -9,7 +9,10 @@ import {
 import { container } from "./TimelineRow.css";
 
 export const TimelineRow: FC<
-  { events: DebugEvent[]; style?: React.CSSProperties } & React.HTMLAttributes<HTMLDivElement>
+  {
+    events: DebugEvent[];
+    style?: React.CSSProperties;
+  } & React.HTMLAttributes<HTMLDivElement>
 > = ({ events, ...props }) => {
   const {
     container: timelineContainer,
@@ -88,7 +91,7 @@ export const TimelineRow: FC<
             </TimelineEventGroup>
           );
         }),
-    [events, scale]
+    [events, scale],
   );
 
   const durationElements = useMemo(() => {
@@ -99,11 +102,11 @@ export const TimelineRow: FC<
 
     const reduceNetwork = <T extends string>(
       p: ReduceState,
-      e: DebugEvent<T>
+      e: DebugEvent<T>,
     ) => {
       const handleClick = (duration: number) => () =>
         setSelectedEvent((event) =>
-          event?.timestamp === e.timestamp ? undefined : { ...e, duration }
+          event?.timestamp === e.timestamp ? undefined : { ...e, duration },
         );
 
       if (p.start === undefined && e.type === "fetchRequest") {
@@ -128,7 +131,7 @@ export const TimelineRow: FC<
               bottom: 0,
             }}
             onClick={handleClick(e.timestamp - p.start.timestamp)}
-          />
+          />,
         );
         p.start = undefined;
         return p;
@@ -147,7 +150,7 @@ export const TimelineRow: FC<
               bottom: 0,
             }}
             onClick={handleClick(e.timestamp - p.start.timestamp)}
-          />
+          />,
         );
         p.start = undefined;
         return p;
@@ -160,7 +163,7 @@ export const TimelineRow: FC<
 
     const reduceAlive = <T extends string>(
       p: ReduceState,
-      e: DebugEvent<T>
+      e: DebugEvent<T>,
     ) => {
       if (e.operation.kind === "mutation" && e.type === "execution") {
         activeMutations++;
@@ -195,7 +198,7 @@ export const TimelineRow: FC<
               left: scale(p.start.timestamp),
               right: timelineContainer.clientWidth - scale(e.timestamp),
             }}
-          />
+          />,
         );
         p.start = undefined;
         return p;
@@ -215,7 +218,7 @@ export const TimelineRow: FC<
       {
         alive: { start: undefined, elements: [] },
         network: { start: undefined, elements: [] },
-      }
+      },
     );
 
     const finalAliveDuration = reducedDurations.alive.start
@@ -260,7 +263,7 @@ export const TimelineRow: FC<
           .filter(
             (e) =>
               e.props.style.right < timelineContainer.clientWidth &&
-              e.props.style.left < timelineContainer.clientWidth
+              e.props.style.left < timelineContainer.clientWidth,
           )
           .map((e) =>
             cloneElement(e, {
@@ -270,14 +273,14 @@ export const TimelineRow: FC<
                 left: Math.max(0, e.props.style.left),
                 right: Math.max(0, e.props.style.right),
               },
-            })
+            }),
           )}
       </>
       <>
         {eventElements.filter(
           (e) =>
             e.props.style.left > -20 &&
-            e.props.style.left < timelineContainer.clientWidth + 20
+            e.props.style.left < timelineContainer.clientWidth + 20,
         )}
       </>
     </div>

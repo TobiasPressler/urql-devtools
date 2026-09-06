@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useCallback, useState } from "react";
+import { FC, useMemo, useCallback, useState } from "react";
 import {
   GraphQLNamedType,
   GraphQLScalarType,
@@ -47,12 +47,15 @@ export const Stack: FC<StackProps> = ({ currentType, setType }) => {
   const hasFields = useMemo(() => {
     return Boolean(
       "getFields" in currentType ||
-        "getTypes" in currentType ||
-        "getValues" in currentType
+      "getTypes" in currentType ||
+      "getValues" in currentType,
     );
   }, [currentType]);
 
-  const isActiveId = useCallback((id: ActiveIds) => activeIds.includes(id), [activeIds]);
+  const isActiveId = useCallback(
+    (id: ActiveIds) => activeIds.includes(id),
+    [activeIds],
+  );
 
   const handleOnClick = useCallback(
     (id: ActiveIds) => {
@@ -62,13 +65,15 @@ export const Stack: FC<StackProps> = ({ currentType, setType }) => {
         setActiveIds((current) => [id, ...current]);
       }
     },
-    [setActiveIds, activeIds, isActiveId]
+    [setActiveIds, activeIds, isActiveId],
   );
 
   return (
     <div className={stackWrapper}>
       <div className={typeNameWrapper}>
-        <code data-kind={kind} className={typeKind}>{kind}</code>
+        <code data-kind={kind} className={typeKind}>
+          {kind}
+        </code>
         <span>{currentType.name}</span>
       </div>
       {currentType.description ? (

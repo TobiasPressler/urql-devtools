@@ -1,19 +1,19 @@
-import React, { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren } from "react";
 import { GraphQLNamedType } from "graphql";
 import { faHome, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Toolbar } from "../../../components";
-import {
-  flexContainer,
-  textButton,
-  breadcrumbs,
-} from "./TopBar.css";
+import { flexContainer, textButton, breadcrumbs } from "./TopBar.css";
 
 interface TopBarProps {
   setStack: (stack: GraphQLNamedType[] | []) => void;
   stack: GraphQLNamedType[] | [];
 }
 
-export const TopBar: FC<PropsWithChildren<TopBarProps>> = ({ setStack, stack, children }: PropsWithChildren<TopBarProps>) => {
+export const TopBar: FC<PropsWithChildren<TopBarProps>> = ({
+  setStack,
+  stack,
+  children,
+}: PropsWithChildren<TopBarProps>) => {
   const prevType = stack[stack.length - 2];
 
   return (

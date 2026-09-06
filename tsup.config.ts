@@ -6,7 +6,7 @@ import { defineConfig } from "tsup";
 import { nodeModulesPolyfillPlugin } from "esbuild-plugins-node-modules-polyfill";
 
 const pkg = JSON.parse(
-  await readFile(new URL("./package.json", import.meta.url), "utf-8")
+  await readFile(new URL("./package.json", import.meta.url), "utf-8"),
 );
 
 /** Stub electron for extension builds (replaces require('electron') with empty object). */
@@ -46,15 +46,10 @@ function electronExternal(): Plugin {
 const isExtension = process.env.BUILD_ENV !== "electron";
 
 const sharedDefine = {
-  "process.env.NODE_ENV": JSON.stringify(
-    process.env.NODE_ENV || "development"
-  ),
-  "process.env.BUILD_ENV": JSON.stringify(
-    process.env.BUILD_ENV || "extension"
-  ),
+  "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
+  "process.env.BUILD_ENV": JSON.stringify(process.env.BUILD_ENV || "extension"),
   "process.env.PKG_VERSION": JSON.stringify(pkg.version),
 };
-
 
 export default defineConfig(
   isExtension
@@ -74,7 +69,12 @@ export default defineConfig(
         clean: true,
         splitting: false,
         define: sharedDefine,
-        esbuildPlugins: [electronStub(), svgr(), vanillaExtractPlugin(), nodeModulesPolyfillPlugin()],
+        esbuildPlugins: [
+          electronStub(),
+          svgr(),
+          vanillaExtractPlugin(),
+          nodeModulesPolyfillPlugin(),
+        ],
         onSuccess: "node scripts/build-extension.js",
       }
     : [
@@ -101,8 +101,13 @@ export default defineConfig(
           sourcemap: true,
           splitting: false,
           define: sharedDefine,
-          esbuildPlugins: [electronExternal(), svgr(), vanillaExtractPlugin(), nodeModulesPolyfillPlugin()],
+          esbuildPlugins: [
+            electronExternal(),
+            svgr(),
+            vanillaExtractPlugin(),
+            nodeModulesPolyfillPlugin(),
+          ],
           onSuccess: "node scripts/build-electron.js",
         },
-      ]
+      ],
 );

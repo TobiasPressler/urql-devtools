@@ -14,9 +14,12 @@ export const TimelineAliveDuration: FC<
 
 type NetworkState = "fetching" | "success" | "error";
 
-export const TimelineNetworkDuration: FC<
-  { state: NetworkState; isSelected?: boolean; style?: React.CSSProperties; onClick?: () => void }
-> = ({ state, isSelected, ...props }) => {
+export const TimelineNetworkDuration: FC<{
+  state: NetworkState;
+  isSelected?: boolean;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}> = ({ state, isSelected, ...props }) => {
   const { ref, tooltipProps, isVisible } = useTooltip();
 
   return (

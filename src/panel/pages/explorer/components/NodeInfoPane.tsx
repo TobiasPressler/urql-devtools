@@ -1,4 +1,4 @@
-import React, {
+import {
   FC,
   useContext,
   useMemo,
@@ -51,14 +51,14 @@ const NodeInfoContent: FC<{ node: ParsedFieldNode }> = ({ node }) => {
       node.value || node.children
         ? JSON.stringify(node.value || node.children, null, 2)
         : false,
-    [node.value, node.children]
+    [node.value, node.children],
   );
 
   const isExpanded = useMemo(
     () =>
       (value && value.length < 10000) ||
       (expanded && previousNode.current._id == node._id),
-    [node._id, expanded, value]
+    [node._id, expanded, value],
   );
 
   const handleReveal = useCallback(() => setExpanded(true), []);
@@ -94,7 +94,11 @@ const NodeInfoContent: FC<{ node: ParsedFieldNode }> = ({ node }) => {
           {isExpanded ? (
             <CodeHighlight code={value} language="javascript" />
           ) : (
-            <div role={"button"} onClick={handleReveal} className={expandPrompt}>
+            <div
+              role={"button"}
+              onClick={handleReveal}
+              className={expandPrompt}
+            >
               Click to expand
             </div>
           )}
@@ -107,7 +111,9 @@ const NodeInfoContent: FC<{ node: ParsedFieldNode }> = ({ node }) => {
 const getDescription = (status: ParsedFieldNode["cacheOutcome"]) => {
   switch (status) {
     case "hit": {
-      return <p className={description}>{"This result was served from cache."}</p>;
+      return (
+        <p className={description}>{"This result was served from cache."}</p>
+      );
     }
     case "partial": {
       return (

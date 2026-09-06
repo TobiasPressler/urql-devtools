@@ -24,12 +24,9 @@ interface OverrideProps {
   style?: React.CSSProperties;
 }
 
-const PaneRoot: FC<PropsWithChildren<React.HTMLAttributes<HTMLDivElement> & OverrideProps>> = ({
-  children,
-  forcedOrientation,
-  initSize,
-  ...props
-}) => {
+const PaneRoot: FC<
+  PropsWithChildren<React.HTMLAttributes<HTMLDivElement> & OverrideProps>
+> = ({ children, forcedOrientation, initSize, ...props }) => {
   const [grabbed, setGrabbed] = useState(false);
   const [size, setSize] = useState(initSize ? initSize : { x: 400, y: 400 });
   const dynamicOrientation = useOrientationWatcher();
@@ -60,9 +57,11 @@ const PaneRoot: FC<PropsWithChildren<React.HTMLAttributes<HTMLDivElement> & Over
                   ...s,
                   y: window.innerHeight - latestPosition.y,
                 }
-              : { ...s, x: window.innerWidth - latestPosition.x }
+              : { ...s, x: window.innerWidth - latestPosition.x },
           );
-          moving && renderFrame();
+          if (moving) {
+            renderFrame();
+          }
         });
       };
 
@@ -82,7 +81,7 @@ const PaneRoot: FC<PropsWithChildren<React.HTMLAttributes<HTMLDivElement> & Over
       window.addEventListener("mouseup", handleMouseUp);
       window.addEventListener("mousemove", handleMouseMove);
     },
-    [size, isPortrait]
+    [size, isPortrait],
   );
 
   const dynamicStyle = useMemo(
@@ -90,7 +89,7 @@ const PaneRoot: FC<PropsWithChildren<React.HTMLAttributes<HTMLDivElement> & Over
       isPortrait
         ? { minHeight: size.y, height: size.y, width: "auto" }
         : { minWidth: size.x, width: size.x, height: "auto" },
-    [size, isPortrait]
+    [size, isPortrait],
   );
 
   return (
@@ -121,21 +120,25 @@ type Pane = typeof PaneRoot & {
   ItemTitle: FC<React.HTMLAttributes<HTMLHeadingElement>>;
 };
 
-const Body: FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => (
-  <div {...props} className={`${body} ${className || ""}`} />
-);
+const Body: FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  ...props
+}) => <div {...props} className={`${body} ${className || ""}`} />;
 
-const Header: FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ className, ...props }) => (
-  <h2 {...props} className={`${header} ${className || ""}`} />
-);
+const Header: FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
+  className,
+  ...props
+}) => <h2 {...props} className={`${header} ${className || ""}`} />;
 
-const Item: FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => (
-  <div {...props} className={`${item} ${className || ""}`} />
-);
+const Item: FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  ...props
+}) => <div {...props} className={`${item} ${className || ""}`} />;
 
-const ItemTitle: FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ className, ...props }) => (
-  <h3 {...props} className={`${itemTitle} ${className || ""}`} />
-);
+const ItemTitle: FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
+  className,
+  ...props
+}) => <h3 {...props} className={`${itemTitle} ${className || ""}`} />;
 
 (PaneRoot as Pane).Body = Body;
 (PaneRoot as Pane).Header = Header;

@@ -25,7 +25,7 @@ const main = async () => {
     .catch((err) => {
       if (err.code === "ENOENT") {
         console.error(
-          `Could not find ${COSMOS_INDEX}. Have you run cosmos-export?`
+          `Could not find ${COSMOS_INDEX}. Have you run cosmos-export?`,
         );
       }
       throw err;

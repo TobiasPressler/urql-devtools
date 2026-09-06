@@ -10,9 +10,8 @@ const ArrowIcon: FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const Arrow: FC<React.SVGProps<SVGSVGElement> & { "data-active"?: boolean }> = ({
-  className,
-  ...props
-}) => (
+export const Arrow: FC<
+  React.SVGProps<SVGSVGElement> & { "data-active"?: boolean }
+> = ({ className, ...props }) => (
   <ArrowIcon {...props} className={`${arrow} ${className || ""}`} />
 );

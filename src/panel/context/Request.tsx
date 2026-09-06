@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   PropsWithChildren,
   useState,
@@ -33,7 +33,7 @@ export const RequestContext = createContext<RequestContextValue>(null as any);
 
 export const useRequest = (): RequestContextValue => useContext(RequestContext);
 
-export const RequestProvider: FC<PropsWithChildren>  = ({ children }) => {
+export const RequestProvider: FC<PropsWithChildren> = ({ children }) => {
   const { sendMessage, addMessageHandler } = useDevtoolsContext();
   const [state, setState] = useState<{
     fetching: boolean;
@@ -41,7 +41,7 @@ export const RequestProvider: FC<PropsWithChildren>  = ({ children }) => {
     error?: Record<string, unknown>;
   }>({ fetching: false, response: undefined, error: undefined });
   const [query, setQuery] = useState<string | undefined>(
-    localStorage.getItem("urql-last-request") || undefined
+    localStorage.getItem("urql-last-request") || undefined,
   );
   const [schema, setSchema] = useState<GraphQLSchema>();
 
@@ -75,13 +75,13 @@ export const RequestProvider: FC<PropsWithChildren>  = ({ children }) => {
       try {
         // Starting at GQL 16 this can throw for invalid queries
         isIntrospection = isIntrospectionQuery(debugEvent.operation.query);
-      } catch (e) {
+      } catch {
         isIntrospection = false;
       }
 
       if (debugEvent.type === "update" && isIntrospection) {
         setSchema(
-          appendPopulateDirective(buildClientSchema(debugEvent.data.value))
+          appendPopulateDirective(buildClientSchema(debugEvent.data.value)),
         );
         return;
       }
@@ -128,7 +128,7 @@ export const RequestProvider: FC<PropsWithChildren>  = ({ children }) => {
       execute,
       schema,
     }),
-    [query, state, execute, schema]
+    [query, state, execute, schema],
   );
 
   return <RequestContext.Provider value={value} children={children} />;
@@ -153,14 +153,11 @@ const isIntrospectionQuery = (query: DocumentNode) => {
 
 const appendPopulateDirective = (schema: GraphQLSchema): GraphQLSchema => {
   try {
-    return extendSchema(
-      schema,
-      parse(`directive @populate on FIELD`)
-    );
+    return extendSchema(schema, parse(`directive @populate on FIELD`));
   } catch (err: any) {
     if (
       err.message.startsWith(
-        'Directive "populate" already exists in the schema'
+        'Directive "populate" already exists in the schema',
       )
     )
       return schema;

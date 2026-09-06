@@ -54,7 +54,7 @@ const changelogFunctions = {
         });
 
         return links;
-      })
+      }),
     );
 
     let changesetLink = "- Updated dependencies";

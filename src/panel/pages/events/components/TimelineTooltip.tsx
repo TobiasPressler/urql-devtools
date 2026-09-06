@@ -106,7 +106,7 @@ export const useTooltip = () => {
 
     const mObserver = new MutationObserver(calculateTooltipPosition);
     const rObserver = new ResizeObserver(() =>
-      requestAnimationFrame(calculateTooltipPosition)
+      requestAnimationFrame(calculateTooltipPosition),
     );
     mObserver.observe(ref.current, {
       attributes: true,
@@ -153,6 +153,6 @@ export const useTooltip = () => {
       tooltipProps,
       isVisible,
     }),
-    [handleTargetRef, tooltipProps, isVisible]
+    [handleTargetRef, tooltipProps, isVisible],
   );
 };

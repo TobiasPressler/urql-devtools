@@ -1,5 +1,11 @@
 import { style, globalStyle } from "@vanilla-extract/css";
-import { colorCanvasElevated05, colorTextDimmedActive, colorTextDimmedBase, colorTextDimmedHover, space2 } from "../../../theme.css";
+import {
+  colorCanvasElevated05,
+  colorTextDimmedActive,
+  colorTextDimmedBase,
+  colorTextDimmedHover,
+  space2,
+} from "../../../theme.css";
 
 export const svg = style({
   cursor: "pointer",

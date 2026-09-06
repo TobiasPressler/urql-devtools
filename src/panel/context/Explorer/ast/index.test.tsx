@@ -21,7 +21,7 @@ const expectCorrectOutput = (testcase: TestCase) => {
   } as any;
 
   return expect(
-    handleResponse({ operation, data: testcase.data, parsedNodes: {} })
+    handleResponse({ operation, data: testcase.data, parsedNodes: {} }),
   );
 };
 

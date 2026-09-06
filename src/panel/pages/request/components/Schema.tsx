@@ -1,8 +1,4 @@
-import React, {
-  useContext,
-  useState,
-  useCallback,
-} from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { GraphQLNamedType } from "graphql";
 import { RequestContext } from "../../../context";
 import { Stack } from "./Stack";
@@ -10,23 +6,21 @@ import { Fields } from "./Fields";
 import { Search } from "./Search";
 import { TopBar } from "./TopBar";
 import { Collapsible } from "./Collapsible";
-import {
-  flexContainer,
-  container,
-  title,
-  wrapper,
-} from "./Schema.css";
+import { flexContainer, container, title, wrapper } from "./Schema.css";
 
 type ActiveIds = 1 | 2 | 3;
 
 export const Schema: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
-  props
+  props,
 ) => {
   const [activeIds, setActiveIds] = useState<ActiveIds[]>([1]);
   const [stack, setStack] = useState<GraphQLNamedType[]>([]);
   const { schema } = useContext(RequestContext);
 
-  const isActiveId = useCallback((id: ActiveIds) => activeIds.includes(id), [activeIds]);
+  const isActiveId = useCallback(
+    (id: ActiveIds) => activeIds.includes(id),
+    [activeIds],
+  );
 
   const handleHeaderClick = useCallback(
     (id: ActiveIds) => {
@@ -36,7 +30,7 @@ export const Schema: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
         setActiveIds((current) => [id, ...current]);
       }
     },
-    [setActiveIds, activeIds, isActiveId]
+    [setActiveIds, activeIds, isActiveId],
   );
 
   if (schema === undefined) {

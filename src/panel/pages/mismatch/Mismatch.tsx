@@ -1,4 +1,4 @@
-import React, { FC, ComponentProps } from "react";
+import { FC, ComponentProps } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBomb } from "@fortawesome/free-solid-svg-icons";
 import { CodeHighlight } from "../../components";
@@ -31,7 +31,11 @@ export const Mismatch: FC<ComponentProps<"div">> = (props) => {
         </p>
       </div>
       <div className={content}>
-        <CodeHighlight code={shellCode} language="shell" className={codeClass} />
+        <CodeHighlight
+          code={shellCode}
+          language="shell"
+          className={codeClass}
+        />
       </div>
     </div>
   );

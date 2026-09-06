@@ -23,13 +23,11 @@ const eventGroupIcon: Record<string, FC<React.SVGProps<SVGSVGElement>>> = {
   other: OtherIcon,
 };
 
-export const TimelineEvent: FC<
-  {
-    event: DebugEvent;
-    style?: CSSProperties;
-    onClick?: () => void;
-  }
-> = ({ event, style, onClick }) => {
+export const TimelineEvent: FC<{
+  event: DebugEvent;
+  style?: CSSProperties;
+  onClick?: () => void;
+}> = ({ event, style, onClick }) => {
   const { ref, tooltipProps, isVisible } = useTooltip();
 
   const iconSize = useMemo(
@@ -39,12 +37,12 @@ export const TimelineEvent: FC<
         .includes(event.type)
         ? 12
         : 8,
-    [event.type]
+    [event.type],
   );
 
   const Icon = useMemo(
     () => eventGroupIcon[event.type] || eventGroupIcon.other,
-    []
+    [],
   );
 
   return (
@@ -65,14 +63,13 @@ export const TimelineEvent: FC<
 };
 
 export const TimelineEventGroup: FC<
-  PropsWithChildren<React.HTMLAttributes<HTMLSpanElement> & {
-    style?: CSSProperties;
-    onClick?: () => void;
-  }>
-> = ({
-  children,
-  ...props
-}) => {
+  PropsWithChildren<
+    React.HTMLAttributes<HTMLSpanElement> & {
+      style?: CSSProperties;
+      onClick?: () => void;
+    }
+  >
+> = ({ children, ...props }) => {
   const { ref, tooltipProps } = useTooltip();
   const [isExpanded, setExpanded] = useState(false);
 
@@ -80,7 +77,11 @@ export const TimelineEventGroup: FC<
 
   return (
     <>
-      <span ref={ref as React.Ref<HTMLSpanElement>} {...props} className={`${svgContainer} ${props.className || ""}`}>
+      <span
+        ref={ref as React.Ref<HTMLSpanElement>}
+        {...props}
+        className={`${svgContainer} ${props.className || ""}`}
+      >
         <FontAwesomeIcon
           icon={faCaretSquareUp}
           onClick={() => setExpanded((e) => !e)}
@@ -89,7 +90,11 @@ export const TimelineEventGroup: FC<
         />
       </span>
       {isExpanded && (
-        <div {...tooltipProps} onMouseLeave={handleMouseLeave} className={eventPopout}>
+        <div
+          {...tooltipProps}
+          onMouseLeave={handleMouseLeave}
+          className={eventPopout}
+        >
           {children}
         </div>
       )}

@@ -22,7 +22,7 @@ const MockTimelineProvider: PropsWithChildren = ({ children }) => {
         graphqlType: ["query", "mutation", "subscription"],
       },
     }),
-    [filter]
+    [filter],
   );
 
   return (

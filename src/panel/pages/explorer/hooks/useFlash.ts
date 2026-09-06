@@ -20,7 +20,7 @@ export const useFlash = (): UseFlashResponse => {
         from: defaultState,
         to: [flashState, defaultState],
       } as any),
-    [api]
+    [api],
   );
 
   return [props as React.CSSProperties, flash];

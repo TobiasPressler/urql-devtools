@@ -1,5 +1,16 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasBase, colorCanvasHover, colorDividerBase, colorPrimaryBase, colorTextBase, colorTextDimmedBase, fontSizeBodyL, fontSizeBodyM, lineHeightBodyL, space3 } from "../../../theme.css";
+import {
+  colorCanvasBase,
+  colorCanvasHover,
+  colorDividerBase,
+  colorPrimaryBase,
+  colorTextBase,
+  colorTextDimmedBase,
+  fontSizeBodyL,
+  fontSizeBodyM,
+  lineHeightBodyL,
+  space3,
+} from "../../../theme.css";
 
 export const container = style({
   flex: 1,
