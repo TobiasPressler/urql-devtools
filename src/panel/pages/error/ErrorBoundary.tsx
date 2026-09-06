@@ -1,13 +1,21 @@
-import React, { Component, ComponentProps } from "react";
+import React, { Component } from "react";
 import { faBug, faRedoAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components";
-import { rem } from "polished";
 import { CodeHighlight } from "../../components";
 import { openExternalUrl } from "../../util";
+import {
+  container,
+  content,
+  header,
+  hint,
+  bugIcon,
+  code,
+  button,
+  buttonArray,
+} from "./ErrorBoundary.css";
 
 export class ErrorBoundary extends Component<
-  ComponentProps<typeof Container>,
+  { children?: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>,
   { error?: Error }
 > {
   state: { error?: Error } = {};
@@ -37,24 +45,26 @@ export class ErrorBoundary extends Component<
     }
 
     return (
-      <Container {...this.props}>
-        <Content>
-          <BugIcon icon={faBug} />
-          <Header>Unexpected Error</Header>
-          <Hint>
+      <div {...this.props} className={`${container} ${this.props.className || ""}`}>
+        <div className={content}>
+          <FontAwesomeIcon icon={faBug} className={bugIcon} />
+          <h1 className={header}>Unexpected Error</h1>
+          <p className={hint}>
             Something went wrong and {"we're"} not totally sure why...
-          </Hint>
-          <ButtonArray>
-            <Button data-type="icon" onClick={this.handleReloadClick}>
+          </p>
+          <div className={buttonArray}>
+            <button data-type="icon" onClick={this.handleReloadClick} className={button}>
               <FontAwesomeIcon icon={faRedoAlt} />
-            </Button>
-            <Button onClick={this.handleReportClick}>Report issue</Button>
-          </ButtonArray>
-        </Content>
-        <Content>
-          <Code code={this.state.error.stack} />
-        </Content>
-      </Container>
+            </button>
+            <button onClick={this.handleReportClick} className={button}>
+              Report issue
+            </button>
+          </div>
+        </div>
+        <div className={content}>
+          <CodeHighlight code={this.state.error.stack || ""} language="javascript" className={code} />
+        </div>
+      </div>
     );
   }
 }
@@ -106,7 +116,6 @@ const generateErrorTemplate = (err: Error) => {
   | @urql/devtools | 0.0.0     |
     `;
   }
-  // Electron error template
   return `
   # About
 
@@ -167,80 +176,3 @@ const createIssueUrl = (err: Error) => {
 
   return `${uri}?${params}`;
 };
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 100%;
-  width: ${rem(400)};
-  margin: ${(p) => p.theme.space[6]};
-`;
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  background: ${(p) => p.theme.colors.canvas.base};
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: auto;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-
-    & > ${Content} {
-      margin: ${rem(6)};
-    }
-  }
-`;
-
-const Header = styled.h1`
-  color: ${(p) => p.theme.colors.text.base};
-  font-weight: 400;
-  margin: 0;
-`;
-
-const Hint = styled.p`
-  text-align: center;
-  color: ${(p) => p.theme.colors.textDimmed.base};
-`;
-
-const BugIcon = styled(FontAwesomeIcon)`
-  font-size: ${(p) => p.theme.fontSizes.display.m};
-  margin-bottom: ${(p) => p.theme.space[8]};
-  color: ${(p) => p.theme.colors.error.base};
-`;
-
-const Code = styled(CodeHighlight)`
-  max-width: 100%;
-  box-sizing: border-box;
-  color: ${(p) => p.theme.colors.error.base};
-`;
-
-const Button = styled.button`
-  margin: ${(p) => p.theme.space[2]};
-  padding: ${(p) => `${p.theme.space[3]} ${p.theme.space[5]}`};
-  border-radius: ${(p) => p.theme.radii.m};
-  cursor: pointer;
-  outline: none;
-  color: ${(p) => p.theme.colors.primary.contrast};
-  background: ${(p) => p.theme.colors.primary.base};
-
-  &[data-type="icon"] {
-    padding: ${(p) => `${p.theme.space[3]} ${p.theme.space[5]}`};
-  }
-
-  &:hover {
-    background: ${(p) => p.theme.colors.primary.hover};
-  }
-
-  &:active {
-    background: ${(p) => p.theme.colors.primary.active};
-  }
-`;
-
-const ButtonArray = styled.div`
-  display: flex;
-`;

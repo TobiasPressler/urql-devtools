@@ -1,8 +1,7 @@
-import React, { ComponentProps, FC, PropsWithChildren } from "react";
-import styled from "styled-components";
+import { FC, HTMLAttributes, PropsWithChildren } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { rem } from "polished";
+import { container, item, itemActive } from "./Toolbar.css";
 
 type ToolbarItem = {
   title: string;
@@ -14,57 +13,21 @@ type ToolbarItem = {
 };
 
 export const Toolbar: FC<PropsWithChildren<
-  { items: ToolbarItem[] } & ComponentProps<typeof Container>
+  { items: ToolbarItem[] } & HTMLAttributes<HTMLDivElement>
 >> = ({ items, children, ...props }) => (
-  <Container {...props}>
-    {items.map((item, index) => (
-      <Item
+  <div {...props} className={`${container} ${props.className || ""}`}>
+    {items.map((itemData, index) => (
+      <button
         key={index}
-        title={item.title}
-        onClick={item.onClick}
-        active={item.active}
-        id={item.id}
-        disabled={item.disabled}
+        title={itemData.title}
+        onClick={itemData.onClick}
+        id={itemData.id}
+        disabled={itemData.disabled}
+        className={`${itemData.active ? itemActive : item}`}
       >
-        <FontAwesomeIcon icon={item.icon} />
-      </Item>
+        <FontAwesomeIcon icon={itemData.icon}/>
+      </button>
     ))}
-
     {children}
-  </Container>
+  </div>
 );
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border-bottom: solid 1px ${(p) => p.theme.colors.divider.base};
-`;
-
-const Item = styled.button<{ active?: boolean }>`
-  font-size: ${(p) => p.theme.fontSizes.body.l};
-  line-height: ${(p) => p.theme.lineHeights.body.l};
-  width: ${rem(32)};
-  height: ${rem(32)};
-  flex-shrink: 0;
-  color: ${(p) =>
-    p.active ? p.theme.colors.primary.base : p.theme.colors.textDimmed.base};
-
-  &:hover {
-    color: ${(p) =>
-      p.active
-        ? p.theme.colors.primary.hover
-        : p.theme.colors.textDimmed.hover};
-  }
-
-  &:active {
-    color: ${(p) =>
-      p.active
-        ? p.theme.colors.primary.active
-        : p.theme.colors.textDimmed.active};
-  }
-
-  &::[disabled] {
-    opacity: 0.5;
-  }
-`;

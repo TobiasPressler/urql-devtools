@@ -4,11 +4,9 @@ import React, {
   useState,
   useCallback,
   useEffect,
-  ComponentProps,
+  CSSProperties,
 } from "react";
-import styled from "styled-components";
 import { Operation } from "@urql/core";
-import { rem } from "polished";
 import { useTimelineContext, START_PADDING } from "../../context";
 import { Background } from "../../components/Background";
 import {
@@ -18,8 +16,20 @@ import {
   TimelineSourceIcon,
   Settings,
 } from "./components";
+import {
+  page,
+  pageContent,
+  timelineContainer,
+  timelineIcons,
+  timelineList,
+} from "./Timeline.css";
 
-export const Timeline: FC<ComponentProps<typeof Page>> = (props) => {
+interface TimelineProps {
+  className?: string;
+  style?: CSSProperties;
+}
+
+export const Timeline: FC<TimelineProps> = (props) => {
   const {
     setContainer,
     scale,
@@ -34,29 +44,23 @@ export const Timeline: FC<ComponentProps<typeof Page>> = (props) => {
   } = useTimelineContext();
   const [selectedSource, setSelectedSource] = useState<Operation | undefined>();
 
-  // Unmount source pane on event select
   useEffect(() => {
     if (selectedEvent) {
       setSelectedSource(undefined);
     }
   }, [selectedEvent]);
 
-  // Unmount event pane on source select
   useEffect(() => {
     if (selectedSource) {
       setSelectedEvent(undefined);
     }
   }, [selectedSource]);
 
-  // Add keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Back to beginning
       if (e.key === "Home") {
         setPosition(startTime - START_PADDING);
       }
-
-      // Skip to current time
       if (e.key === "End") {
         setPosition(Date.now());
       }
@@ -71,10 +75,7 @@ export const Timeline: FC<ComponentProps<typeof Page>> = (props) => {
       scale
         ? scale.ticks(getTickCount(container.clientWidth)).map((t) => {
             const delta = t - startTime;
-
-            // Round up numbers (200ms, 300ms, etc)
             const time = Math.round(delta / 1000) * 1000;
-
             return {
               label: `${time}ms`,
               position: scale(time + startTime),
@@ -89,7 +90,6 @@ export const Timeline: FC<ComponentProps<typeof Page>> = (props) => {
       setSelectedSource((current) =>
         current && current.key === o.key ? undefined : o
       );
-
       const latest = [...events[o.key]]
         .reverse()
         .find((e) => e.type === "execution");
@@ -102,14 +102,9 @@ export const Timeline: FC<ComponentProps<typeof Page>> = (props) => {
     () =>
       eventOrder.map((key) => {
         const source = events[key].find((e) => e.operation.kind !== "teardown");
-
-        // Only events for given source is teardown
-        // Unknown source type
-        // TODO: infer type from operation.query
         if (source === undefined) {
           return events[key][0].operation;
         }
-
         return source.operation;
       }),
     [events, eventOrder]
@@ -117,23 +112,16 @@ export const Timeline: FC<ComponentProps<typeof Page>> = (props) => {
 
   const paneProps = useMemo(() => {
     if (selectedSource) {
-      return {
-        source: selectedSource,
-      };
+      return { source: selectedSource };
     }
-
     if (selectedEvent) {
-      return {
-        event: selectedEvent,
-      };
+      return { event: selectedEvent };
     }
     return {};
   }, [selectedSource, selectedEvent]);
 
   const content = useMemo(
     () =>
-      // We lie about the types to save having to do this check
-      // in every child component. This guard is needed.
       !container ? null : (
         <>
           {ticks.map((t, i) => (
@@ -156,11 +144,11 @@ export const Timeline: FC<ComponentProps<typeof Page>> = (props) => {
   );
 
   return (
-    <Page {...props}>
+    <Background {...props} className={`${page} ${props.className || ""}`}>
       <Settings />
-      <PageContent>
-        <TimelineContainer>
-          <TimelineIcons>
+      <div className={pageContent}>
+        <div className={timelineContainer}>
+          <div className={timelineIcons}>
             {sources.map((s) => (
               <TimelineSourceIcon
                 key={s.key}
@@ -174,89 +162,23 @@ export const Timeline: FC<ComponentProps<typeof Page>> = (props) => {
                 }}
               />
             ))}
-          </TimelineIcons>
-          <TimelineList ref={setContainer} draggable="true" key="TimelineList">
+          </div>
+          <div ref={setContainer} draggable="true" key="TimelineList" className={timelineList}>
             {content}
-          </TimelineList>
-        </TimelineContainer>
+          </div>
+        </div>
         <TimelinePane {...paneProps} />
-      </PageContent>
-    </Page>
+      </div>
+    </Background>
   );
 };
-
-const Page = styled(Background)`
-  background-color: ${(p) => p.theme.colors.canvas.base};
-  @media (min-aspect-ratio: 1/1) {
-    flex-direction: column;
-  }
-`;
-
-const PageContent = styled.div`
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-
-  @media (min-aspect-ratio: 1/1) {
-    flex-direction: row;
-  }
-`;
-
-const TimelineContainer = styled.div`
-  display: flex;
-  flex-grow: 1;
-  overflow-y: scroll;
-  overflow-x: hidden;
-`;
-
-const TimelineIcons = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: ${rem(40)};
-
-  /* Margin prevents ticks from being hidden. */
-  margin-top: ${(p) => p.theme.space[10]};
-  height: max-content;
-  background: ${(p) => p.theme.colors.canvas.base};
-  z-index: 1;
-
-  > * {
-    margin-top: ${(p) => p.theme.space[5]};
-  }
-
-  > *:after {
-    content: "";
-    width: ${rem(200)};
-    height: ${rem(200)};
-  }
-`;
-
-const TimelineList = styled.div`
-  cursor: grab;
-  display: block;
-  position: relative;
-  padding: ${(p) => p.theme.space[10]} 0;
-  overflow-y: visible;
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 100%;
-  height: max-content;
-
-  &:active {
-    cursor: grabbing;
-  }
-`;
 
 const getTickCount = (width: number) => {
   if (width < 600) {
     return 2;
   }
-
   if (width < 1300) {
     return 5;
   }
-
   return 10;
 };

@@ -7,9 +7,15 @@ import {
   GraphQLEnumType,
   GraphQLInterfaceType,
 } from "graphql";
-import styled from "styled-components";
 import { Fields } from "./Fields";
 import { Collapsible } from "./Collapsible";
+import {
+  stackWrapper,
+  box,
+  typeKind,
+  description,
+  typeNameWrapper,
+} from "./Stack.css";
 
 const getKind = (node: GraphQLNamedType) => {
   if (node instanceof GraphQLScalarType) return "scalar";
@@ -46,10 +52,10 @@ export const Stack: FC<StackProps> = ({ currentType, setType }) => {
     );
   }, [currentType]);
 
-  const isActiveId = useCallback((id) => activeIds.includes(id), [activeIds]);
+  const isActiveId = useCallback((id: ActiveIds) => activeIds.includes(id), [activeIds]);
 
   const handleOnClick = useCallback(
-    (id) => {
+    (id: ActiveIds) => {
       if (isActiveId(id)) {
         setActiveIds((current) => current.filter((cur) => cur !== id));
       } else {
@@ -60,18 +66,18 @@ export const Stack: FC<StackProps> = ({ currentType, setType }) => {
   );
 
   return (
-    <StackWrapper>
-      <TypeNameWrapper>
-        <TypeKind data-kind={kind}>{kind}</TypeKind>
+    <div className={stackWrapper}>
+      <div className={typeNameWrapper}>
+        <code data-kind={kind} className={typeKind}>{kind}</code>
         <span>{currentType.name}</span>
-      </TypeNameWrapper>
+      </div>
       {currentType.description ? (
         <Collapsible
           title="Description"
           onClick={() => handleOnClick(1)}
           isActive={isActiveId(1)}
         >
-          <Description>{currentType.description}</Description>
+          <p className={description}>{currentType.description}</p>
         </Collapsible>
       ) : null}
       {hasFields ? (
@@ -80,71 +86,13 @@ export const Stack: FC<StackProps> = ({ currentType, setType }) => {
           onClick={() => handleOnClick(2)}
           isActive={isActiveId(2)}
         >
-          <Box>
+          <div className={box}>
             <Fields node={currentType} setType={setType} />
-          </Box>
+          </div>
         </Collapsible>
       ) : null}
-    </StackWrapper>
+    </div>
   );
 };
 
-const StackWrapper = styled.div`
-  box-sizing: border-box;
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const TypeKind = styled.code`
-  color: ${(p) => p.theme.colors.syntax.base};
-  margin-right: ${(p) => p.theme.space[2]};
-
-  &[data-kind="interface"] {
-    color: ${(p) => p.theme.colors.syntax.interface};
-  }
-
-  &[data-kind="enum"] {
-    color: ${(p) => p.theme.colors.syntax.enum};
-  }
-
-  &[data-kind="union"] {
-    color: ${(p) => p.theme.colors.syntax.union};
-  }
-
-  &[data-kind="scalar"] {
-    color: ${(p) => p.theme.colors.syntax.scalar};
-  }
-
-  &[data-kind="input"] {
-    color: ${(p) => p.theme.colors.syntax.input};
-  }
-
-  &[data-kind="type"] {
-    color: ${(p) => p.theme.colors.syntax.type};
-  }
-`;
-
-const Description = styled.p`
-  font-size: ${(p) => p.theme.fontSizes.body.l};
-  line-height: ${(p) => p.theme.lineHeights.body.l};
-  color: ${(p) => p.theme.colors.textDimmed.base};
-  padding: ${(p) => p.theme.space[3]};
-  margin: 0;
-`;
-
-const TypeNameWrapper = styled.div`
-  font-size: ${(p) => p.theme.fontSizes.body.l};
-  line-height: ${(p) => p.theme.lineHeights.body.l};
-  color: ${(p) => p.theme.colors.text.base};
-  padding: ${(p) => p.theme.space[3]};
-`;
+export { box as Box };

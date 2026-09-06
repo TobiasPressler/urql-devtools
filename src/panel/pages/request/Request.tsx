@@ -1,92 +1,30 @@
-import React, { ComponentProps, FC } from "react";
-import styled from "styled-components";
+import React from "react";
 import { Background } from "../../components/Background";
 import { Pane } from "../../components";
 import { Query, Schema, Settings, Response } from "./components";
+import { page, pageContent, paneSection, schemaContainer } from "./Request.css";
 
-export const Request: FC<ComponentProps<typeof Page>> = (props) => {
+export const Request: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
   return (
-    <Page {...props}>
+    <Background {...props} className={`${page} ${props.className || ""}`}>
       <Settings />
-      <PageContent>
+      <div className={pageContent}>
         <Query />
-        {/* {TODO: Hack to offset the panels so they aren't on top of each other.
-       There's definitely better way to do this */}
         <Pane initSize={{ y: 700, x: 400 }}>
           <Pane.Body>
-            <PaneSection>
+            <section className={paneSection}>
               <Response />
-            </PaneSection>
+            </section>
           </Pane.Body>
-          {/* {TODO: Also a hack to make these panes work together, sorry! */}
-          <SchemaContainer
+          <Pane
             forcedOrientation={{ isPortrait: true }}
             initSize={{ y: 350, x: 400 }}
+            className={schemaContainer}
           >
             <Schema />
-          </SchemaContainer>
+          </Pane>
         </Pane>
-      </PageContent>
-    </Page>
+      </div>
+    </Background>
   );
 };
-
-const PaneSection = styled.section`
-  color: ${(p) => p.theme.colors.text.base};
-  background: ${(p) => p.theme.colors.canvas.base};
-  overflow: auto;
-  flex-grow: 1;
-  flex-basis: 0;
-
-  h1 {
-    background-color: ${(p) => p.theme.colors.text.base};
-    position: sticky;
-    top: ${(p) => `-${p.theme.space[6]}`};
-    margin: ${(p) => `-${p.theme.space[6]}`};
-    padding: ${(p) => `${p.theme.space[1]} ${p.theme.space[3]}`};
-    font-size: ${(p) => p.theme.fontSizes.body.m};
-    line-height: ${(p) => p.theme.lineHeights.body.m};
-    font-weight: 400;
-    border-bottom: solid 1px ${(p) => p.theme.colors.divider.base};
-    z-index: 1;
-  }
-
-  h1 + * {
-    margin-top: ${(p) => p.theme.space[8]};
-  }
-`;
-
-const Page = styled(Background)`
-  background-color: ${(p) => p.theme.colors.canvas.base};
-  @media (min-aspect-ratio: 1/1) {
-    flex-direction: column;
-  }
-`;
-
-const SchemaContainer = styled(Pane)`
-  & > div {
-    min-width: 100%;
-    width: 100%;
-  }
-`;
-
-const PageContent = styled.div`
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-
-  @media (min-aspect-ratio: 1/1) {
-    flex-direction: row;
-  }
-
-  .CodeMirror {
-    font-size: ${(p) => p.theme.fontSizes.body.m};
-    height: auto;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-`;

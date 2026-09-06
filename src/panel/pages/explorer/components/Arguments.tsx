@@ -1,12 +1,12 @@
-import React, { FC, useMemo, Fragment, ComponentProps } from "react";
-import styled from "styled-components";
+import React, { FC, useMemo, Fragment } from "react";
 import { ParsedFieldNode } from "../../../context/Explorer/ast";
 import { InlineCodeHighlight } from "../../../components";
+import { argumentText } from "./Arguments.css";
 
 export const Arguments: FC<
   {
     args?: ParsedFieldNode["args"];
-  } & ComponentProps<typeof ArgumentText>
+  } & React.HTMLAttributes<HTMLDivElement>
 > = ({ args, ...props }) => {
   if (!args) {
     return null;
@@ -15,7 +15,7 @@ export const Arguments: FC<
   const entries = useMemo(() => Object.entries(args), [args]);
 
   return (
-    <ArgumentText {...props}>
+    <div {...props} className={`${argumentText} ${props.className || ""}`}>
       (
       {entries.map(([key, value], index) => (
         <Fragment key={key}>
@@ -28,12 +28,6 @@ export const Arguments: FC<
         </Fragment>
       ))}
       )
-    </ArgumentText>
+    </div>
   );
 };
-
-const ArgumentText = styled.div`
-  flex-basis: 0;
-  flex-grow: 1;
-  color: ${(p) => p.theme.colors.text.base};
-`;

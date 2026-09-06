@@ -12,9 +12,17 @@ import {
   GraphQLEnumValue,
   GraphQLObjectType,
 } from "graphql";
-import styled from "styled-components";
 import { InlineCodeHighlight } from "../../../components";
 import { Type } from "./Type";
+import {
+  description,
+  fieldWrapper,
+  separator,
+  name,
+  deprecated,
+  defaultVal,
+  argWrapper,
+} from "./Fields.css";
 
 interface FieldProps {
   node?: GraphQLNamedType;
@@ -29,20 +37,19 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
   const isDeprecated = (
     field: GraphQLField<any, any, any> | GraphQLEnumValue
   ) =>
-    // TODO: this does not exist anymore
     (field as any).isDeprecated ? (
-      <Deprecated>{`Deprecated: ${field.deprecationReason}`}</Deprecated>
+      <code className={deprecated}>{`Deprecated: ${field.deprecationReason}`}</code>
     ) : null;
 
   const getDefaultValue = (field: GraphQLInputField | GraphQLArgument) =>
     field.defaultValue !== undefined || null ? (
-      <Default>
+      <code className={defaultVal}>
         {` = `}
         <InlineCodeHighlight
           code={JSON.stringify(field.defaultValue)}
           language="javascript"
         />
-      </Default>
+      </code>
     ) : null;
 
   const getDescription = (
@@ -54,7 +61,7 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
       | GraphQLObjectType
   ) =>
     field.description ? (
-      <Description>{`"${field.description}"`}</Description>
+      <code data-css-description className={description}>{`"${field.description}"`}</code>
     ) : null;
 
   if (isObjectType(node) || isInterfaceType(node)) {
@@ -71,44 +78,45 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
           const hasFieldLevelDescription = !!fields[field].description;
 
           return (
-            <FieldWrapper
+            <div
               key={i}
               data-multiline={`${
                 hasArgumentLevelDescription || hasFieldLevelDescription
               }`}
+              className={fieldWrapper}
             >
               <div>{getDescription(fields[field])}</div>
               <span>
-                <Name>{fields[field].name}</Name>
+                <span className={name}>{fields[field].name}</span>
                 {args.length > 0 ? "(" : null}
               </span>
               {args.length > 0 ? (
                 <>
-                  <ArgWrapper data-multiline={`${hasArgumentLevelDescription}`}>
+                  <div data-multiline={`${hasArgumentLevelDescription}`} className={argWrapper}>
                     {args.map((arg, idx) => (
                       <Fragment key={idx}>
                         {getDescription(arg)}
                         <code>
                           <code>{arg.name}</code>
-                          <Separator content=":" />
+                          <span data-content=":" className={separator} />
                           <Type type={arg.type} setType={setType} />
                           {getDefaultValue(arg)}
-                          {idx !== args.length - 1 && <Separator content="," />}
+                          {idx !== args.length - 1 && <span data-content="," className={separator} />}
                         </code>
                       </Fragment>
                     ))}
-                  </ArgWrapper>
+                  </div>
                 </>
               ) : null}
               <div>
                 <span>
                   {args.length ? ")" : null}
-                  <Separator content=":" />
+                  <span data-content=":" className={separator} />
                 </span>
                 <Type type={fields[field].type} setType={setType} />
                 {isDeprecated(fields[field])}
               </div>
-            </FieldWrapper>
+            </div>
           );
         })}
       </>
@@ -123,13 +131,13 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
       <>
         {keys.map((field, i) => {
           return (
-            <FieldWrapper key={i}>
+            <div key={i} className={fieldWrapper}>
               {getDescription(fields[field])}
-              <Name>{fields[field].name}</Name>
-              <Separator content=":" />
+              <span className={name}>{fields[field].name}</span>
+              <span data-content=":" className={separator} />
               <Type type={fields[field].type} setType={setType} />
               {getDefaultValue(fields[field])}
-            </FieldWrapper>
+            </div>
           );
         })}
       </>
@@ -142,13 +150,13 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
       <>
         {types.map((type, i) => {
           return (
-            <FieldWrapper key={i} data-multiline="true">
+            <div key={i} data-multiline="true" className={fieldWrapper}>
               {getDescription(type)}
               <span>
-                <Separator content="|" />
+                <span data-content="|" className={separator} />
                 <Type type={type} setType={setType} />
               </span>
-            </FieldWrapper>
+            </div>
           );
         })}
       </>
@@ -161,13 +169,13 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
       <>
         {types.map((type, i) => {
           return (
-            <FieldWrapper key={i} data-multiline="true">
+            <div key={i} data-multiline="true" className={fieldWrapper}>
               {getDescription(type)}
               <span>
                 <code>{type.value}</code>
                 {isDeprecated(type)}
               </span>
-            </FieldWrapper>
+            </div>
           );
         })}
       </>
@@ -176,70 +184,3 @@ export const Fields: FC<FieldProps> = ({ node, setType }) => {
 
   return null;
 };
-
-const Description = styled.code`
-  color: ${(p) => p.theme.colors.syntax.string};
-`;
-
-const FieldWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: baseline;
-  font-size: ${(p) => p.theme.fontSizes.body.l};
-  line-height: ${(p) => p.theme.lineHeights.body.l};
-  padding: ${(p) => p.theme.space[3]};
-  color: ${(p) => p.theme.colors.text.base};
-  white-space: nowrap;
-
-  &:last-child {
-    border: none;
-  }
-
-  & + & {
-    padding-top: 0;
-  }
-
-  &[data-multiline="true"] {
-    flex-direction: column;
-
-    & > ${Description} {
-      margin-bottom: ${(p) => p.theme.space[2]};
-    }
-  }
-`;
-
-const Separator = styled.span`
-  &::before {
-    content: ${({ content }: { content: string }) => `"${content}"`};
-    display: inline-block;
-    color: ${(p) => p.theme.colors.text.base};
-    margin-right: ${(p) => p.theme.space[2]};
-  }
-`;
-
-const Name = styled.span`
-  color: ${(p) => p.theme.colors.syntax.property};
-`;
-
-const Deprecated = styled.code`
-  display: inline-block;
-  color: ${(p) => p.theme.colors.syntax.invalid};
-  margin-left: ${(p) => p.theme.space[2]};
-`;
-
-const Default = styled.code`
-  display: inline-block;
-  color: ${(p) => p.theme.colors.syntax.description};
-  margin-left: ${(p) => p.theme.space[2]};
-`;
-
-const ArgWrapper = styled.div`
-  display: flex;
-
-  &[data-multiline="true"] {
-    flex-direction: column;
-    & > code {
-      padding-left: ${(p) => p.theme.space[3]};
-    }
-  }
-`;

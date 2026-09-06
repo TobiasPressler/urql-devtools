@@ -2,30 +2,34 @@ import React, {
   useContext,
   useState,
   useCallback,
-  ComponentProps,
 } from "react";
 import { GraphQLNamedType } from "graphql";
-import styled from "styled-components";
 import { RequestContext } from "../../../context";
 import { Stack } from "./Stack";
 import { Fields } from "./Fields";
 import { Search } from "./Search";
 import { TopBar } from "./TopBar";
 import { Collapsible } from "./Collapsible";
+import {
+  flexContainer,
+  container,
+  title,
+  wrapper,
+} from "./Schema.css";
 
 type ActiveIds = 1 | 2 | 3;
 
-export const Schema: React.FC<ComponentProps<typeof FlexContainer>> = (
+export const Schema: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props
 ) => {
   const [activeIds, setActiveIds] = useState<ActiveIds[]>([1]);
   const [stack, setStack] = useState<GraphQLNamedType[]>([]);
   const { schema } = useContext(RequestContext);
 
-  const isActiveId = useCallback((id) => activeIds.includes(id), [activeIds]);
+  const isActiveId = useCallback((id: ActiveIds) => activeIds.includes(id), [activeIds]);
 
   const handleHeaderClick = useCallback(
-    (id) => {
+    (id: ActiveIds) => {
       if (isActiveId(id)) {
         setActiveIds((current) => current.filter((cur) => cur !== id));
       } else {
@@ -37,20 +41,20 @@ export const Schema: React.FC<ComponentProps<typeof FlexContainer>> = (
 
   if (schema === undefined) {
     return (
-      <Wrapper>
-        <Title>Loading...</Title>
-      </Wrapper>
+      <div className={wrapper}>
+        <h3 className={title}>Loading...</h3>
+      </div>
     );
   }
 
   if (schema === null) {
     return (
-      <Wrapper>
-        <Title>
+      <div className={wrapper}>
+        <h3 className={title}>
           Something went wrong while fetching your schema, make sure
           introspection is enabled in your settings
-        </Title>
-      </Wrapper>
+        </h3>
+      </div>
     );
   }
 
@@ -61,11 +65,11 @@ export const Schema: React.FC<ComponentProps<typeof FlexContainer>> = (
   };
 
   return (
-    <FlexContainer {...props}>
+    <div {...props} className={`${flexContainer} ${props.className || ""}`}>
       <TopBar setStack={setStack} stack={stack}>
         <Search typeMap={schemaTypes} setType={setType} />
       </TopBar>
-      <Container>
+      <div className={container}>
         {stack.length > 0 ? (
           <Stack
             currentType={stack[stack.length - 1]}
@@ -73,7 +77,7 @@ export const Schema: React.FC<ComponentProps<typeof FlexContainer>> = (
             setStack={setStack}
           />
         ) : (
-          <Wrapper>
+          <div className={wrapper}>
             {schemaTypes.Query ? (
               <Collapsible
                 title="Query"
@@ -101,40 +105,9 @@ export const Schema: React.FC<ComponentProps<typeof FlexContainer>> = (
                 <Fields node={schemaTypes?.Subscription} setType={setType} />
               </Collapsible>
             ) : null}
-          </Wrapper>
+          </div>
         )}
-      </Container>
-    </FlexContainer>
+      </div>
+    </div>
   );
 };
-
-const FlexContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow: hidden;
-`;
-
-const Container = styled.div`
-  flex: 1;
-  overflow: auto;
-  position: relative;
-`;
-
-const Title = styled.h3`
-  color: ${(p) => p.theme.colors.text.base};
-  font-size: ${(p) => p.theme.fontSizes.body.m};
-  line-height: ${(p) => p.theme.lineHeights.body.m};
-  font-weight: normal;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  padding: ${(p) => p.theme.space[3]};
-`;
-
-const Wrapper = styled.div`
-  box-sizing: border-box;
-  position: relative;
-  width: 100%;
-  color: ${(p) => p.theme.colors.textDimmed.base};
-`;

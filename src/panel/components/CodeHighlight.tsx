@@ -5,15 +5,20 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import styled from "styled-components";
+import {
+  styledInlineBlock,
+  styledCodeBlock,
+  copyButton,
+  div,
+} from "./CodeHighlight.css";
 
-type PrismLanguage = "javascript" | "graphql";
+type PrismLanguage = "javascript" | "graphql" | "shell";
 
 export const CodeHighlight: FC<
   {
     code: string;
     language: PrismLanguage;
-  } & ComponentPropsWithoutRef<typeof StyledCodeBlock>
+  } & ComponentPropsWithoutRef<"pre">
 > = ({ code, language, ...props }) => {
   const [visible, setVisibility] = useState(false);
   const [copy, setCopied] = useState({ state: false });
@@ -43,7 +48,6 @@ export const CodeHighlight: FC<
       if (!ref) {
         return;
       }
-      // Create new child node with text
       const child = document.createElement("code");
       child.textContent = code;
 
@@ -52,29 +56,28 @@ export const CodeHighlight: FC<
       }
 
       ref.appendChild(child);
-      // Run prism on element (in web worker/async)
-      // when code is a chonker
       Prism.highlightElement(ref, code.length > 600);
     },
     [language, code]
   );
 
   return (
-    <Div
+    <div
+      className={div}
       onMouseEnter={() => setVisibility(true)}
       onMouseLeave={() => setVisibility(false)}
     >
-      <StyledCodeBlock
+      <pre
         {...props}
         ref={handleRef}
-        className={`language language-${language} ${props.className || ""}`}
+        className={`language language-${language} ${styledCodeBlock} ${props.className || ""}`}
       />
       {visible ? (
-        <CopyButton onClick={handleClick} id="copy-button">
+        <button onClick={handleClick} id="copy-button" className={copyButton}>
           {copy.state ? "Copied" : "Copy"}
-        </CopyButton>
+        </button>
       ) : null}
-    </Div>
+    </div>
   );
 };
 
@@ -82,7 +85,7 @@ export const InlineCodeHighlight: FC<
   {
     code: string;
     language: PrismLanguage;
-  } & ComponentPropsWithoutRef<typeof StyledCodeBlock>
+  } & ComponentPropsWithoutRef<"pre">
 > = ({ code, language, ...props }) => {
   const handleRef = useCallback(
     (ref: HTMLPreElement | null) => {
@@ -90,61 +93,22 @@ export const InlineCodeHighlight: FC<
         return;
       }
 
-      // Create new child node with text
       const child = document.createElement("code");
       child.textContent = code;
       ref.firstChild
         ? ref.replaceChild(child, ref.firstChild)
         : ref.appendChild(child);
 
-      // Run prism on pre
       Prism.highlightElement(ref, false);
     },
     [language, code]
   );
 
   return (
-    <StyledInlineBlock
+    <pre
       {...props}
       ref={handleRef}
-      className={`language language-${language} ${props.className || ""}`}
+      className={`language language-${language} ${styledInlineBlock} ${props.className || ""}`}
     />
   );
 };
-
-export const StyledInlineBlock = styled.pre`
-  display: inline-flex;
-  margin: 0 !important;
-  padding: 0 !important;
-  background-color: none !important;
-  background: none !important;
-
-  & > code > div {
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-`;
-
-const StyledCodeBlock = styled.pre`
-  background: ${(p) => p.theme.colors.codeblock.background} !important;
-  font-size: ${(p) => p.theme.fontSizes.body.m} !important;
-`;
-
-const CopyButton = styled.button`
-  background: ${(p) => p.theme.colors.canvas.elevated05};
-  color: ${(p) => p.theme.colors.text.base};
-  padding: ${(p) => p.theme.space[3]};
-  border-radius: ${(p) => p.theme.radii.m};
-  position: absolute;
-  top: ${(p) => p.theme.space[2]};
-  right: ${(p) => p.theme.space[2]};
-
-  &:hover {
-    background: ${(p) => p.theme.colors.canvas.elevated10} !important;
-  }
-`;
-
-const Div = styled.div`
-  position: relative;
-  max-width: 100%;
-`;

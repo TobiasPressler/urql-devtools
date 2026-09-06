@@ -1,5 +1,4 @@
-import React, { useState, useCallback, FC, ComponentProps } from "react";
-import styled from "styled-components";
+import React, { useState, useCallback, FC } from "react";
 import {
   faCog,
   faFastBackward,
@@ -9,8 +8,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Collapsible, Toolbar } from "../../../components";
 import { useTimelineContext, START_PADDING } from "../../../context";
+import {
+  container,
+  content,
+  filterList,
+  filterGroup,
+  filterButton,
+} from "./Settings.css";
 
-export const Settings: FC<ComponentProps<typeof Container>> = (props) => {
+export const Settings: FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
   const [collapsed, setCollapsed] = useState(true);
   const handleExpandToggle = useCallback(() => setCollapsed((c) => !c), []);
   const { setPosition, startTime, zoomIn, zoomOut } = useTimelineContext();
@@ -26,7 +32,7 @@ export const Settings: FC<ComponentProps<typeof Container>> = (props) => {
   ]);
 
   return (
-    <Container {...props}>
+    <div {...props} className={`${container} ${props.className || ""}`}>
       <Toolbar
         items={[
           {
@@ -58,14 +64,14 @@ export const Settings: FC<ComponentProps<typeof Container>> = (props) => {
         ]}
       />
 
-      <Content collapsed={collapsed}>
+      <Collapsible collapsed={collapsed} className={content}>
         <Filter />
-      </Content>
-    </Container>
+      </Collapsible>
+    </div>
   );
 };
 
-export const Filter: FC<ComponentProps<typeof FilterList>> = (props) => {
+export const Filter: FC = () => {
   const { filterables, filter, setFilter } = useTimelineContext();
 
   const handleSourceToggle = useCallback(
@@ -91,99 +97,35 @@ export const Filter: FC<ComponentProps<typeof FilterList>> = (props) => {
   );
 
   return (
-    <FilterList {...props}>
-      <FilterGroup>
+    <div className={filterList}>
+      <div className={filterGroup}>
         {filterables.graphqlType.map((e) => (
-          <FilterButton
+          <button
             key={e}
             title="Toggle Graphql operation type"
             role="checkbox"
             aria-selected={filter.graphqlType.includes(e)}
             onClick={handleTypeToggle(e)}
+            className={filterButton}
           >
             {e}
-          </FilterButton>
+          </button>
         ))}
-      </FilterGroup>
-      <FilterGroup>
+      </div>
+      <div className={filterGroup}>
         {filterables.source.map((e) => (
-          <FilterButton
+          <button
             key={e}
             title="Toggle debug event source"
             role="checkbox"
             aria-selected={filter.source.includes(e)}
             onClick={handleSourceToggle(e)}
+            className={filterButton}
           >
             {e.replace(/Exchange$/, "")}
-          </FilterButton>
+          </button>
         ))}
-      </FilterGroup>
-    </FilterList>
+      </div>
+    </div>
   );
 };
-
-const FilterList = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: solid 1px ${(p) => p.theme.colors.divider.base};
-`;
-
-const FilterGroup = styled.div`
-  margin: ${(p) => p.theme.space[2]} 0;
-  padding: 0 ${(p) => p.theme.space[2]};
-  display: flex;
-  align-items: center;
-
-  & + & {
-    border-left: solid 1px ${(p) => p.theme.colors.divider.base};
-  }
-`;
-
-const FilterButton = styled.button`
-  padding: ${(p) => `${p.theme.space[2]} ${p.theme.space[3]}`};
-  border: none;
-  font-size: ${(p) => p.theme.fontSizes.body.m};
-  font-height: ${(p) => p.theme.lineHeights.body.m};
-  font-weight: 500;
-  margin: 0 ${(p) => p.theme.space[2]};
-  border-radius: ${(p) => p.theme.radii.s};
-  cursor: pointer;
-  outline: none;
-  background: ${(p) => p.theme.colors.canvas.elevated05};
-  color: ${(p) => p.theme.colors.text.base};
-
-  &:hover {
-    background: ${(p) => p.theme.colors.canvas.hover};
-  }
-
-  &:active {
-    background: ${(p) => p.theme.colors.canvas.active};
-  }
-
-  &[aria-selected="true"] {
-    background: ${(p) => p.theme.colors.primary.base};
-    color: ${(p) => p.theme.colors.primary.contrast};
-
-    &:hover {
-      background: ${(p) => p.theme.colors.primary.hover};
-    }
-
-    &:active {
-      background: ${(p) => p.theme.colors.primary.active};
-    }
-  }
-`;
-
-const Content = styled(Collapsible)`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  box-sizing: border-box;
-  transition: max-height 300ms ease;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;

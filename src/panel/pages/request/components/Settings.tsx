@@ -15,9 +15,9 @@ export const Settings: FC = () => {
 
   const handleTrashClick = useCallback(() => setQuery(""), [setQuery]);
 
-  const handleFormatClick = useCallback(() => {
+  const handleFormatClick = useCallback(async () => {
     if (query) {
-      const formatted = prettier.format(query, {
+      const formatted = await prettier.format(query, {
         parser: "graphql",
         plugins: [parserGraphql],
       });

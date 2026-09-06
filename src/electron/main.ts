@@ -59,7 +59,6 @@ const createWindow = () => {
   process.env.NODE_ENV !== "production" && win.webContents.openDevTools();
 };
 
-app.allowRendererProcessReuse = true;
 app.whenReady().then(() => {
   createWebsocketServer();
   createWindow();

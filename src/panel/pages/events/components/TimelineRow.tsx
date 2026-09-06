@@ -1,19 +1,18 @@
 import React, { FC, useMemo, ComponentProps, cloneElement } from "react";
-import styled from "styled-components";
 import { DebugEvent } from "@urql/core";
-import { rem } from "polished";
 import { useTimelineContext } from "../../../context";
 import { TimelineEvent, TimelineEventGroup } from "./TimelineEvent";
 import {
   TimelineAliveDuration,
   TimelineNetworkDuration,
 } from "./TimelineDuration";
+import { container } from "./TimelineRow.css";
 
 export const TimelineRow: FC<
-  { events: DebugEvent[] } & ComponentProps<typeof Container>
+  { events: DebugEvent[]; style?: React.CSSProperties } & React.HTMLAttributes<HTMLDivElement>
 > = ({ events, ...props }) => {
   const {
-    container,
+    container: timelineContainer,
     scale,
     setSelectedEvent,
     selectedEvent,
@@ -94,11 +93,10 @@ export const TimelineRow: FC<
 
   const durationElements = useMemo(() => {
     type ReduceState = {
-      elements: JSX.Element[];
+      elements: React.JSX.Element[];
       start: DebugEvent | undefined;
     };
 
-    // Network durations
     const reduceNetwork = <T extends string>(
       p: ReduceState,
       e: DebugEvent<T>
@@ -108,18 +106,15 @@ export const TimelineRow: FC<
           event?.timestamp === e.timestamp ? undefined : { ...e, duration }
         );
 
-      // Request started
       if (p.start === undefined && e.type === "fetchRequest") {
         p.start = e;
         return p;
       }
 
-      // Safety condition - shouldn't occur
       if (!p.start) {
         return p;
       }
 
-      // Response
       if (e.type === "fetchSuccess") {
         p.elements.push(
           <TimelineNetworkDuration
@@ -129,7 +124,7 @@ export const TimelineRow: FC<
             style={{
               position: "absolute",
               left: scale(p.start.timestamp),
-              right: container.clientWidth - scale(e.timestamp),
+              right: timelineContainer.clientWidth - scale(e.timestamp),
               bottom: 0,
             }}
             onClick={handleClick(e.timestamp - p.start.timestamp)}
@@ -148,7 +143,7 @@ export const TimelineRow: FC<
             style={{
               position: "absolute",
               left: scale(p.start.timestamp),
-              right: container.clientWidth - scale(e.timestamp),
+              right: timelineContainer.clientWidth - scale(e.timestamp),
               bottom: 0,
             }}
             onClick={handleClick(e.timestamp - p.start.timestamp)}
@@ -161,20 +156,16 @@ export const TimelineRow: FC<
       return p;
     };
 
-    /** Semaphore */
     let activeMutations = 0;
 
-    // Alive durations
     const reduceAlive = <T extends string>(
       p: ReduceState,
       e: DebugEvent<T>
     ) => {
-      // Semaphore addition
       if (e.operation.kind === "mutation" && e.type === "execution") {
         activeMutations++;
       }
 
-      // First event to start timeline duration
       if (p.start === undefined && e.type !== "teardown") {
         p.start = e;
         return p;
@@ -188,12 +179,10 @@ export const TimelineRow: FC<
         e.operation.kind === "mutation" &&
         (e.type === "update" || e.type === "error");
 
-      // Semaphore removal
       if (isMutationResponse) {
         activeMutations = Math.max(0, activeMutations - 1);
       }
 
-      // End of timeline duration
       if (
         e.type === "teardown" ||
         (isMutationResponse && activeMutations === 0)
@@ -204,7 +193,7 @@ export const TimelineRow: FC<
             style={{
               position: "absolute",
               left: scale(p.start.timestamp),
-              right: container.clientWidth - scale(e.timestamp),
+              right: timelineContainer.clientWidth - scale(e.timestamp),
             }}
           />
         );
@@ -236,7 +225,7 @@ export const TimelineRow: FC<
             style={{
               position: "absolute",
               left: scale(reducedDurations.alive.start.timestamp),
-              right: container.clientWidth - scale(Date.now()),
+              right: timelineContainer.clientWidth - scale(Date.now()),
             }}
           />,
         ]
@@ -250,7 +239,7 @@ export const TimelineRow: FC<
             style={{
               position: "absolute",
               left: scale(reducedDurations.network.start.timestamp),
-              right: container.clientWidth - scale(Date.now()),
+              right: timelineContainer.clientWidth - scale(Date.now()),
               bottom: 0,
             }}
             onClick={() => setSelectedEvent(reducedDurations.network.start)}
@@ -262,16 +251,16 @@ export const TimelineRow: FC<
       .concat(finalAliveDuration)
       .concat(reducedDurations.network.elements)
       .concat(finalNetworkDuration);
-  }, [events, scale, container.clientWidth, setSelectedEvent]);
+  }, [events, scale, timelineContainer.clientWidth, setSelectedEvent]);
 
   return (
-    <Container {...props}>
+    <div {...props} className={`${container} ${props.className || ""}`}>
       <>
         {durationElements
           .filter(
             (e) =>
-              e.props.style.right < container.clientWidth &&
-              e.props.style.left < container.clientWidth
+              e.props.style.right < timelineContainer.clientWidth &&
+              e.props.style.left < timelineContainer.clientWidth
           )
           .map((e) =>
             cloneElement(e, {
@@ -288,15 +277,9 @@ export const TimelineRow: FC<
         {eventElements.filter(
           (e) =>
             e.props.style.left > -20 &&
-            e.props.style.left < container.clientWidth + 20
+            e.props.style.left < timelineContainer.clientWidth + 20
         )}
       </>
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div`
-  position: relative;
-  height: ${rem(20)};
-  margin-top: ${(p) => p.theme.space[5]};
-`;

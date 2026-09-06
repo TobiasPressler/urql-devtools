@@ -1,8 +1,8 @@
 import "./App.css";
-import React, { FC } from "react";
+import "./global.css";
+import { FC, useLayoutEffect } from "react";
 import { HashRouter, useLocation, Navigate } from "react-router-dom";
 import { Activity } from "react";
-import { ThemeProvider } from "styled-components";
 import {
   Disconnected,
   Explorer,
@@ -12,7 +12,7 @@ import {
   ErrorBoundary,
 } from "./pages";
 import { Navigation } from "./components/Navigation";
-import { lightTheme, darkTheme, GlobalStyle } from "./theme";
+import { lightThemeClass, darkThemeClass } from "./theme.css";
 import {
   DevtoolsProvider,
   RequestProvider,
@@ -22,16 +22,31 @@ import {
 } from "./context";
 import { isLightMode } from "./util/EnvUtils";
 
-export const App: FC = () => (
-  <ThemeProvider theme={isLightMode() ? lightTheme : darkTheme}>
+// Applied to <body> (rather than a wrapping element) so the theme vars are
+// also visible to portal-rendered content (e.g. TimelineTooltip), which is
+// appended directly to document.body and would otherwise sit outside the
+// scope of any theme class rendered inside the React tree.
+const useBodyThemeClass = () => {
+  useLayoutEffect(() => {
+    const themeClass = isLightMode() ? lightThemeClass : darkThemeClass;
+    document.body.classList.add(themeClass);
+    return () => {
+      document.body.classList.remove(themeClass);
+    };
+  }, []);
+};
+
+export const App: FC = () => {
+  useBodyThemeClass();
+
+  return (
     <ErrorBoundary>
       <DevtoolsProvider>
         <AppRoutes />
       </DevtoolsProvider>
     </ErrorBoundary>
-    <GlobalStyle />
-  </ThemeProvider>
-);
+  );
+};
 
 const RoutedContent: FC = () => {
   const { pathname } = useLocation();

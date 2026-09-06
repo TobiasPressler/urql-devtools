@@ -51,12 +51,12 @@ describe("on mount", () => {
   });
 
   it("listens for events", () => {
-    expect(addMessageHandler).toBeCalledTimes(1);
+    expect(addMessageHandler).toHaveBeenCalledTimes(1);
   });
 
   it("triggers schema request", () => {
-    expect(sendMessage).toBeCalledTimes(1);
-    expect(sendMessage).toBeCalledWith({
+    expect(sendMessage).toHaveBeenCalledTimes(1);
+    expect(sendMessage).toHaveBeenCalledWith({
       type: "execute-query",
       source: "devtools",
       query: getIntrospectionQuery(),
@@ -64,7 +64,7 @@ describe("on mount", () => {
   });
 
   it("does not persist query to local storage", () => {
-    expect(setItem).toBeCalledTimes(0);
+    expect(setItem).toHaveBeenCalledTimes(0);
   });
 
   describe("state", () => {
@@ -130,8 +130,8 @@ describe("on setQuery", () => {
   });
 
   it("persists query to local storage", () => {
-    expect(setItem).toBeCalledTimes(1);
-    expect(setItem).toBeCalledWith("urql-last-request", query);
+    expect(setItem).toHaveBeenCalledTimes(1);
+    expect(setItem).toHaveBeenCalledWith("urql-last-request", query);
   });
 
   describe("state", () => {
@@ -167,8 +167,8 @@ describe("on execute", () => {
 
   describe("send message", () => {
     it("is called", () => {
-      expect(sendMessage).toBeCalledTimes(1);
-      expect(sendMessage).toBeCalledWith({
+      expect(sendMessage).toHaveBeenCalledTimes(1);
+      expect(sendMessage).toHaveBeenCalledWith({
         type: "execute-query",
         source: "devtools",
         query,

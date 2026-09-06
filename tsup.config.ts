@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import type { Plugin } from "esbuild";
 import svgr from "esbuild-plugin-svgr";
+import { vanillaExtractPlugin } from "@vanilla-extract/esbuild-plugin";
 import { defineConfig } from "tsup";
 import { nodeModulesPolyfillPlugin } from "esbuild-plugins-node-modules-polyfill";
 
@@ -73,7 +74,7 @@ export default defineConfig(
         clean: true,
         splitting: false,
         define: sharedDefine,
-        esbuildPlugins: [electronStub(), svgr(), nodeModulesPolyfillPlugin()],
+        esbuildPlugins: [electronStub(), svgr(), vanillaExtractPlugin(), nodeModulesPolyfillPlugin()],
         onSuccess: "node scripts/build-extension.js",
       }
     : [
@@ -100,7 +101,7 @@ export default defineConfig(
           sourcemap: true,
           splitting: false,
           define: sharedDefine,
-          esbuildPlugins: [electronExternal(), svgr(), nodeModulesPolyfillPlugin()],
+          esbuildPlugins: [electronExternal(), svgr(), vanillaExtractPlugin(), nodeModulesPolyfillPlugin()],
           onSuccess: "node scripts/build-electron.js",
         },
       ]

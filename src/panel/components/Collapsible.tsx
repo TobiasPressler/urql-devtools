@@ -2,12 +2,12 @@ import React, { forwardRef, useCallback, useRef, useMemo } from "react";
 
 export const Collapsible = forwardRef<
   HTMLDivElement,
-  JSX.IntrinsicElements["div"] & { collapsed: boolean }
+  React.HTMLAttributes<HTMLDivElement> & { collapsed: boolean }
 >(function Collapsible({ collapsed, ...props }, forwardedRef) {
   const ref = useRef<HTMLDivElement>(null);
 
   const handleRef = useCallback(
-    (e) => {
+    (e: HTMLDivElement | null) => {
       ref.current = e;
 
       if (typeof forwardedRef === "function") {
@@ -15,7 +15,7 @@ export const Collapsible = forwardRef<
       }
 
       if (forwardedRef) {
-        (forwardedRef as any).current = e;
+        forwardedRef.current = e;
       }
     },
     [ref]

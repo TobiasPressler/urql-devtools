@@ -9,14 +9,13 @@ import "codemirror/addon/lint/lint.css";
 import "codemirror-graphql/lint";
 import "codemirror-graphql/hint";
 import "codemirror-graphql/mode";
-import CodeMirror, { ShowHintOptions, LintStateOptions } from "codemirror";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { useRequest } from "../../../context";
+import CodeMirror from "codemirror";
 
-/** Query editor
- * Inspired by Graphiql's query editor - https://github.com/graphql/graphiql/blob/master/packages/graphiql/src/components/QueryEditor.js
- */
+type ShowHintOptions = any;
+import React, { useEffect, useState } from "react";
+import { useRequest } from "../../../context";
+import { container } from "./Query.css";
+
 export const Query: React.FC = () => {
   const [codemirror, setCodeMirror] = useState<CodeMirror.Editor | undefined>();
   const { query, setQuery, execute, schema } = useRequest();
@@ -33,14 +32,12 @@ export const Query: React.FC = () => {
     });
   }, [codemirror, execute]);
 
-  // Update on schema change
   useEffect(() => {
     if (codemirror === undefined || schema === undefined) {
       return;
     }
 
-    // TODO!: Update types
-    codemirror.setOption("lint", ({ schema } as unknown) as LintStateOptions);
+    codemirror.setOption("lint", ({ schema } as any));
     codemirror.setOption("hintOptions", ({
       schema,
     } as unknown) as ShowHintOptions);
@@ -52,7 +49,6 @@ export const Query: React.FC = () => {
     });
   }, [codemirror, schema]);
 
-  // Update on programmatic value change
   useEffect(() => {
     if (!codemirror) {
       return;
@@ -82,7 +78,7 @@ export const Query: React.FC = () => {
   };
 
   return (
-    <Container>
+    <div className={container}>
       <textarea
         id="query-text-box"
         ref={handleRef}
@@ -91,13 +87,6 @@ export const Query: React.FC = () => {
           "# Type your query here then hit 'Ctrl+Enter' to execute it.\n"
         }
       />
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding-top: ${(p) => p.theme.space[2]};
-`;

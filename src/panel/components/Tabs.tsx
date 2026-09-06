@@ -1,43 +1,23 @@
-import React, { FC } from "react";
-import styled from "styled-components";
+import { FC } from "react";
+import { container, tab } from "./Tabs.css";
 
-interface TabsProps<T = any> {
+interface TabsProps<T = string> {
   readonly active: T;
   readonly options: readonly { readonly label: string; readonly value: T }[];
   readonly setActive: (active: T) => void;
 }
 
 export const Tabs: FC<TabsProps> = ({ active, options, setActive }) => (
-  <Container>
+  <div className={container}>
     {options.map((o) => (
-      <Tab
+      <h3
         key={o.value}
         data-active={o.value === active}
         onClick={() => setActive(o.value)}
+        className={tab}
       >
         {o.label}
-      </Tab>
+      </h3>
     ))}
-  </Container>
+  </div>
 );
-
-const Container = styled.div`
-  display: flex;
-`;
-
-const Tab = styled.h3`
-  margin: 0;
-  padding: ${(p) => p.theme.space[3]};
-  font-size: ${(p) => p.theme.fontSizes.body.m};
-  line-height: ${(p) => p.theme.lineHeights.body.m};
-  color: ${(p) => p.theme.colors.textDimmed.base};
-
-  &[data-active="true"] {
-    color: ${(p) => p.theme.colors.text.base};
-  }
-
-  &:hover {
-    color: ${(p) => p.theme.colors.textDimmed.hover};
-    cursor: pointer;
-  }
-`;

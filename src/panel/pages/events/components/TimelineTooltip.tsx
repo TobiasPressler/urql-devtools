@@ -1,4 +1,3 @@
-import { rem } from "polished";
 import React, {
   useState,
   useEffect,
@@ -9,10 +8,10 @@ import React, {
   ComponentProps,
   FC,
 } from "react";
-import styled from "styled-components";
 import { Portal } from "../../../components";
+import { tooltipElement } from "./TimelineTooltip.css";
 
-export const TimelineTooltip: FC<PropsWithChildren<JSX.IntrinsicElements["div"]>> = ({
+export const TimelineTooltip: FC<PropsWithChildren<ComponentProps<"div">>> = ({
   children,
   style: styleProp,
   ...props
@@ -42,45 +41,26 @@ export const TimelineTooltip: FC<PropsWithChildren<JSX.IntrinsicElements["div"]>
 
   return (
     <Portal>
-      <TooltipElement
+      <div
         {...props}
         ref={ref}
-        positionOffset={offset}
-        style={{ ...styleProp, marginLeft: rem(offset) }}
+        className={tooltipElement}
+        style={
+          {
+            ...styleProp,
+            marginLeft: `${offset}px`,
+            "--tooltip-offset": `${offset}px`,
+          } as React.CSSProperties
+        }
       >
         {children}
-      </TooltipElement>
+      </div>
     </Portal>
   );
 };
 
-const TooltipElement = styled.div<{ positionOffset: number }>`
-  position: relative;
-  background-color: ${(p) => p.theme.colors.tooltip.background};
-  border-radius: ${(p) => p.theme.radii.s};
-  color: ${(p) => p.theme.colors.text.base};
-  font-size: ${(p) => p.theme.fontSizes.body.m};
-  line-height: ${(p) => p.theme.lineHeights.body.m};
-  margin: 0;
-  padding: ${(p) => `${p.theme.space[3]} ${p.theme.space[4]}`};
-  white-space: nowrap;
-
-  &::after {
-    content: "";
-    display: block;
-    position: absolute;
-    border-top: ${rem(9)} solid ${(p) => p.theme.colors.tooltip.background};
-    border-left: ${rem(6)} solid transparent;
-    border-right: ${rem(6)} solid transparent;
-    margin-top: -${rem(1)};
-    left: calc(50% - ${(p) => rem(p.positionOffset)});
-    top: 100%;
-    transform: translate(-50%, 0);
-  }
-`;
-
 export const useTooltip = () => {
-  const ref = useRef<HTMLElement>();
+  const ref = useRef<HTMLElement>(null);
   const mouseX = useRef<number | undefined>(undefined);
   const [hasRef, setHasRef] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -98,7 +78,6 @@ export const useTooltip = () => {
     setTooltipProps({
       style: {
         position: "fixed",
-        // 12px for event size
         left: width > 12 ? mouseX.current : x + width / 2,
         bottom: window.innerHeight - y + 10,
         transform: `translateX(-50%)`,
@@ -120,7 +99,6 @@ export const useTooltip = () => {
     return fn;
   }, []);
 
-  // Update position on resize
   useEffect(() => {
     if (!ref.current) {
       return;
@@ -141,7 +119,6 @@ export const useTooltip = () => {
     };
   }, [hasRef]);
 
-  // Set visible on mouse enter
   useEffect(() => {
     if (!ref.current) {
       return;

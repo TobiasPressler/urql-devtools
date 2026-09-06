@@ -1,24 +1,30 @@
-import { rem } from "polished";
 import React, {
   PropsWithChildren,
   useCallback,
   useState,
   useMemo,
   MouseEventHandler,
-  ComponentProps,
   useRef,
   FC,
 } from "react";
-import styled from "styled-components";
 import { useOrientationWatcher } from "../hooks";
+import {
+  container,
+  draggingEdge,
+  body,
+  header,
+  item,
+  itemTitle,
+} from "./Pane.css";
 
 interface OverrideProps {
   forcedOrientation?: { isPortrait: boolean };
   initSize?: { x: number; y: number };
   "data-snapshot"?: boolean;
+  style?: React.CSSProperties;
 }
 
-const PaneRoot: FC<PropsWithChildren<ComponentProps<typeof PaneContainer> & OverrideProps>> = ({
+const PaneRoot: FC<PropsWithChildren<React.HTMLAttributes<HTMLDivElement> & OverrideProps>> = ({
   children,
   forcedOrientation,
   initSize,
@@ -36,7 +42,6 @@ const PaneRoot: FC<PropsWithChildren<ComponentProps<typeof PaneContainer> & Over
   type position = { x: number; y: number };
   const handleClick = useCallback<MouseEventHandler>(
     (ce) => {
-      // Right/middle click
       if (ce.button !== 0) {
         return;
       }
@@ -80,7 +85,7 @@ const PaneRoot: FC<PropsWithChildren<ComponentProps<typeof PaneContainer> & Over
     [size, isPortrait]
   );
 
-  const style = useMemo(
+  const dynamicStyle = useMemo(
     () =>
       isPortrait
         ? { minHeight: size.y, height: size.y, width: "auto" }
@@ -89,102 +94,48 @@ const PaneRoot: FC<PropsWithChildren<ComponentProps<typeof PaneContainer> & Over
   );
 
   return (
-    <PaneContainer
+    <div
       {...props}
-      style={{ ...props.style, ...style }}
+      className={`${container} ${props.className || ""}`}
+      style={{ ...props.style, ...dynamicStyle }}
       data-portrait={`${isPortrait}`}
       ref={paneRef}
     >
       {children}
-      <DraggingEdge
+      <div
         role="seperator"
         aria-orientation={isPortrait ? "horizontal" : "vertical"}
         aria-grabbed={grabbed}
         onMouseDown={handleClick}
         data-portrait={`${isPortrait}`}
+        className={draggingEdge}
       />
-    </PaneContainer>
+    </div>
   );
 };
 
-const PaneContainer = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: ${(p) => p.theme.colors.canvas.base};
-  border-top: solid 1px ${(p) => p.theme.colors.divider.base};
-
-  width: 100%;
-  height: ${rem(400)};
-
-  &[data-portrait="false"] {
-    width: ${rem(400)};
-    height: 100%;
-    border-top: none;
-    border-left: solid 1px ${(p) => p.theme.colors.divider.base};
-  }
-`;
-
-const edgeWidth = 4;
-
-const DraggingEdge = styled.div`
-  position: absolute;
-  z-index: 3;
-  opacity: 0;
-
-  cursor: ns-resize;
-  width: 100%;
-  height: ${edgeWidth}px;
-  top: -${edgeWidth / 2}px;
-
-  &[data-portrait="false"] {
-    width: ${edgeWidth}px;
-    height: 100%;
-    margin-top: 0;
-    top: 0;
-    left: -${edgeWidth / 2}px;
-    cursor: ew-resize;
-  }
-`;
-
-const Body = styled.div`
-  flex: 1;
-  overflow: auto;
-`;
-
-const Header = styled.h2`
-  margin: 0;
-  padding: ${(p) => p.theme.space[3]};
-  background: ${(p) => p.theme.colors.codeblock.background};
-  border-bottom: solid 1px ${(p) => p.theme.colors.divider.base};
-  font-size: ${(p) => p.theme.fontSizes.body.m};
-  line-height: ${(p) => p.theme.lineHeights.body.m};
-  font-weight: 400;
-`;
-
-const Item = styled.div`
-  padding: ${(p) => p.theme.space[3]};
-
-  & + & {
-    border-top: solid 1px ${(p) => p.theme.colors.divider.base};
-  }
-`;
-
-const ItemTitle = styled.h3`
-  color: ${(p) => p.theme.colors.text.base};
-  font-size: ${(p) => p.theme.fontSizes.body.m};
-  line-height: ${(p) => p.theme.lineHeights.body.m};
-  font-weight: normal;
-  margin-top: 0;
-  margin-bottom: ${(p) => p.theme.space[2]};
-`;
-
 type Pane = typeof PaneRoot & {
-  Body: typeof Body;
-  Header: typeof Header;
-  Item: typeof Item;
-  ItemTitle: typeof ItemTitle;
+  Body: FC<React.HTMLAttributes<HTMLDivElement>>;
+  Header: FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  Item: FC<React.HTMLAttributes<HTMLDivElement>>;
+  ItemTitle: FC<React.HTMLAttributes<HTMLHeadingElement>>;
 };
+
+const Body: FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => (
+  <div {...props} className={`${body} ${className || ""}`} />
+);
+
+const Header: FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ className, ...props }) => (
+  <h2 {...props} className={`${header} ${className || ""}`} />
+);
+
+const Item: FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => (
+  <div {...props} className={`${item} ${className || ""}`} />
+);
+
+const ItemTitle: FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ className, ...props }) => (
+  <h3 {...props} className={`${itemTitle} ${className || ""}`} />
+);
 
 (PaneRoot as Pane).Body = Body;
 (PaneRoot as Pane).Header = Header;

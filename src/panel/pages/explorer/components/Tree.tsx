@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import styled from "styled-components";
 import { ParsedNodeMap, ParsedFieldNode } from "../../../context/Explorer/ast";
 import { ListItem, SystemListItem } from "./ListItem";
+import { list } from "./Tree.css";
 
 interface TreeProps {
   nodeMap: ParsedNodeMap | (ParsedNodeMap | null)[] | undefined;
@@ -38,12 +38,12 @@ export const Tree: FC<TreeProps> = ({ nodeMap, depth = 0, index }) => {
   const role = depth === 0 ? "tree" : "group";
 
   return (
-    <List key={index} role={role}>
+    <ul role={role} key={index} className={list}>
       {typenameField && <SystemListItem node={typenameField} index={index} />}
       {[...scalarFields, ...childrenFields].map((node) => (
         <ListItem key={node._id} node={node} depth={depth} />
       ))}
-    </List>
+    </ul>
   );
 };
 
@@ -60,27 +60,3 @@ const sortFields = (nodes: ParsedFieldNode[]) => {
     return a.name.localeCompare(b.name);
   });
 };
-
-const List = styled.ul`
-  margin: 0;
-  padding: ${(p) => p.theme.space[3]};
-  margin-left: ${(p) => p.theme.space[2]};
-  border-left: 3px solid ${(p) => p.theme.colors.divider.base};
-  list-style: none;
-  font-size: ${(p) => p.theme.fontSizes.body.l};
-  line-height: ${(p) => p.theme.lineHeights.body.l};
-  color: ${(p) => p.theme.colors.textDimmed.base};
-
-  &:last-of-type {
-    margin-bottom: 0;
-  }
-
-  &[role="tree"] {
-    border-left: none;
-
-    & > li {
-      border-left: none;
-      padding: 0;
-    }
-  }
-`;

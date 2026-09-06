@@ -1,52 +1,33 @@
-import React, { PropsWithChildren, ReactChild } from "react";
-import styled from "styled-components";
+import React from "react";
 import { Arrow } from "../../../components";
+import { collapsibleHeader } from "./Collapsible.css";
 
 interface CollapsibleProps {
   title: string;
   isActive: boolean;
-  children: ReactChild;
+  children: React.ReactNode;
   onClick: () => void;
+  className?: string;
 }
 
-export const Collapsible: PropsWithChildren<CollapsibleProps> = ({
+export const Collapsible: React.FC<CollapsibleProps> = ({
   title,
   isActive,
   children,
   onClick,
+  className,
 }) => {
   return (
     <>
-      <CollapsibleHeader onClick={onClick} aria-expanded={isActive}>
+      <button
+        onClick={onClick}
+        aria-expanded={isActive}
+        className={`${collapsibleHeader} ${className || ""}`}
+      >
         <Arrow data-active={isActive} />
         <span>{title}</span>
-      </CollapsibleHeader>
+      </button>
       {isActive && <div>{children}</div>}
     </>
   );
 };
-
-const CollapsibleHeader = styled.button`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  color: ${(p) => p.theme.colors.textDimmed.base};
-  border-top: 1px solid ${(p) => p.theme.colors.divider.base};
-  border-bottom: 1px solid ${(p) => p.theme.colors.divider.base};
-  font-size: ${(p) => p.theme.fontSizes.body.m};
-  line-height: ${(p) => p.theme.lineHeights.body.m};
-  padding: ${(p) => p.theme.space[2]};
-
-  &:hover {
-    background: ${(p) => p.theme.colors.canvas.hover};
-  }
-
-  &:focus {
-    background: ${(p) => p.theme.colors.canvas.active};
-    outline: none;
-  }
-
-  & + & {
-    border-top: 0;
-  }
-`;

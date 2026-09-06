@@ -44,7 +44,7 @@ describe("on mount", () => {
   });
 
   it("listens for events", () => {
-    expect(addMessageHandler).toBeCalledTimes(1);
+    expect(addMessageHandler).toHaveBeenCalledTimes(1);
   });
 
   describe("state", () => {

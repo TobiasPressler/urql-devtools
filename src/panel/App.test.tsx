@@ -8,10 +8,10 @@ jest.mock("./context/Devtools.tsx", () => {
   };
 });
 import React from "react";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import { App, AppRoutes } from "./App";
 import { useDevtoolsContext } from "./context";
-import { darkTheme, lightTheme } from "./theme";
+import { darkThemeClass, lightThemeClass } from "./theme.css";
 
 describe("App", () => {
   describe("on mount", () => {
@@ -31,11 +31,18 @@ describe("App", () => {
       chrome.devtools.panels.themeName = origThemeName;
     });
 
-    it("has a GlobalStyle component and dark theme passed to ThemeProvider", () => {
-      const wrapper = shallow(<App />);
+    beforeEach(() => {
+      (useDevtoolsContext as jest.Mocked<any>).mockReturnValue({
+        client: { connected: false },
+      } as any);
+    });
 
-      expect(wrapper.find("GlobalStyle").exists()).toBe(true);
-      expect(wrapper.find("ThemeProvider").prop("theme")).toBe(darkTheme);
+    it("applies the dark theme class to the document body", () => {
+      const wrapper = mount(<App />);
+
+      expect(document.body.classList.contains(darkThemeClass)).toBe(true);
+
+      wrapper.unmount();
     });
   });
 
@@ -50,11 +57,18 @@ describe("App", () => {
       chrome.devtools.panels.themeName = origThemeName;
     });
 
-    it("has a GlobalStyle component and light theme passed to ThemeProvider", () => {
-      const wrapper = shallow(<App />);
+    beforeEach(() => {
+      (useDevtoolsContext as jest.Mocked<any>).mockReturnValue({
+        client: { connected: false },
+      } as any);
+    });
 
-      expect(wrapper.find("GlobalStyle").exists()).toBe(true);
-      expect(wrapper.find("ThemeProvider").prop("theme")).toBe(lightTheme);
+    it("applies the light theme class to the document body", () => {
+      const wrapper = mount(<App />);
+
+      expect(document.body.classList.contains(lightThemeClass)).toBe(true);
+
+      wrapper.unmount();
     });
   });
 });

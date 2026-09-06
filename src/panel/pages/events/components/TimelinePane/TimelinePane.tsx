@@ -1,5 +1,4 @@
-import React, { FC, ComponentProps, useMemo } from "react";
-import styled from "styled-components";
+import React, { FC, useMemo } from "react";
 import { DebugEvent, Operation } from "@urql/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,13 +9,19 @@ import {
 import { print } from "graphql";
 import { Pane, CodeHighlight } from "../../../../components";
 import { useTimelineContext } from "../../../../context";
+import {
+  container,
+  body,
+  paneSection,
+  getStartedSection,
+  icon,
+} from "./TimelinePane.css";
 
-/** Pane shows additional information about a selected timeline item. */
-// TODO: update data structure
 export const TimelinePane: FC<
   ({ event: DebugEvent } | { source?: Operation }) &
-    ComponentProps<typeof Container>
-> = ({ event, source, ...props }) => {
+    React.HTMLAttributes<HTMLDivElement>
+> = (allProps) => {
+  const { event, source, ...props } = allProps as { event?: DebugEvent; source?: Operation } & React.HTMLAttributes<HTMLDivElement>;
   const content = useMemo(() => {
     if (source) {
       return (
@@ -36,20 +41,19 @@ export const TimelinePane: FC<
     }
 
     return (
-      <GetStartedSection>
+      <div className={getStartedSection}>
         Click around on the timeline to get started...
-      </GetStartedSection>
+      </div>
     );
   }, [event, source]);
 
   return (
-    <Container {...props}>
-      <Body>{content}</Body>
-    </Container>
+    <Pane {...props} className={`${container} ${props.className || ""}`}>
+      <Pane.Body className={body}>{content}</Pane.Body>
+    </Pane>
   );
 };
 
-/** Info about the event clicked by the user. */
 const EventSection: FC<{ event: DebugEvent & { duration?: number } }> = ({
   event,
 }) => {
@@ -65,7 +69,7 @@ const EventSection: FC<{ event: DebugEvent & { duration?: number } }> = ({
   );
 
   return (
-    <PaneSection>
+    <section className={paneSection}>
       <Pane.Header>Event</Pane.Header>
       <Pane.Body>
         <Pane.Item>
@@ -75,14 +79,14 @@ const EventSection: FC<{ event: DebugEvent & { duration?: number } }> = ({
         <Pane.Item>
           <Pane.ItemTitle>Message</Pane.ItemTitle>
           <p>
-            <Icon icon={faQuoteLeft} />
+            <FontAwesomeIcon icon={faQuoteLeft} className={icon} />
             {event.message}
           </p>
         </Pane.Item>
         <Pane.Item>
           <Pane.ItemTitle>Timestamp</Pane.ItemTitle>
           <p>
-            <Icon icon={faStopwatch} />
+            <FontAwesomeIcon icon={faStopwatch} className={icon} />
             {timestamp}
           </p>
         </Pane.Item>
@@ -90,7 +94,7 @@ const EventSection: FC<{ event: DebugEvent & { duration?: number } }> = ({
           <Pane.Item>
             <Pane.ItemTitle>Duration</Pane.ItemTitle>
             <p>
-              <Icon icon={faClock} />
+              <FontAwesomeIcon icon={faClock} className={icon} />
               {(event.duration / 1000).toFixed(2)} seconds
             </p>
           </Pane.Item>
@@ -102,12 +106,12 @@ const EventSection: FC<{ event: DebugEvent & { duration?: number } }> = ({
           </Pane.Item>
         )}
       </Pane.Body>
-    </PaneSection>
+    </section>
   );
 };
-/** Info about the source operation for the given event. */
+
 const SourceSection: FC<{ operation: Operation }> = ({ operation }) => (
-  <PaneSection>
+  <section className={paneSection}>
     <Pane.Header>Operation</Pane.Header>
     <Pane.Body>
       <Pane.Item>
@@ -135,75 +139,8 @@ const SourceSection: FC<{ operation: Operation }> = ({ operation }) => (
         />
       </Pane.Item>
     </Pane.Body>
-  </PaneSection>
+  </section>
 );
-
-const Container = styled(Pane)`
-  background-color: ${(p) => p.theme.colors.canvas.base};
-`;
-
-const Body = styled(Pane.Body)`
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-
-  @media (min-aspect-ratio: 1/1) {
-    flex-direction: column;
-  }
-`;
-
-const PaneSection = styled.section`
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  color: ${(p) => p.theme.colors.textDimmed.base};
-  box-sizing: border-box;
-  background: ${(p) => p.theme.colors.canvas.base};
-
-  p {
-    font-size: ${(p) => p.theme.fontSizes.body.m};
-    line-height: ${(p) => p.theme.lineHeights.body.m};
-    margin: 0;
-  }
-
-  @media (max-aspect-ratio: 1/1) {
-    flex-basis: 50%;
-    flex-grow: 1;
-
-    & + & {
-      max-height: 100%;
-      min-width: 50%;
-      border-left: solid 1px ${(p) => p.theme.colors.divider.base};
-    }
-  }
-
-  @media (min-aspect-ratio: 1/1) {
-    &:only-child {
-      flex-grow: 1;
-    }
-    &:first-child:not(:only-child) {
-      max-height: 50%;
-      height: min-content;
-    }
-
-    & + & {
-      flex-grow: 1;
-      flex-basis: 0;
-      border-top: solid 1px ${(p) => p.theme.colors.divider.base};
-    }
-  }
-`;
-
-const GetStartedSection = styled(PaneSection)`
-  flex-grow: 1;
-  padding: ${(p) => p.theme.space[6]};
-  text-align: center;
-  color: ${(p) => p.theme.colors.textDimmed.base};
-`;
-
-const Icon = styled(FontAwesomeIcon)`
-  margin-right: ${(p) => p.theme.space[2]};
-`;
 
 const removeTrailingNewline = (s: string) =>
   s.substring(0, s.lastIndexOf("\n"));

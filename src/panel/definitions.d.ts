@@ -1,4 +1,5 @@
 declare module "*.svg";
+declare module "*.css" {}
 
 declare namespace NodeJS {
   interface Global {

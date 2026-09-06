@@ -10,8 +10,8 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["@types/chrome"]
+    "types": ["@types/chrome", "jest"]
   },
   "include": ["src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/**/*.test.*", "src/**/*.fixture.*", "src/setupTests.ts", "src/panel/cosmos.*"]
 }

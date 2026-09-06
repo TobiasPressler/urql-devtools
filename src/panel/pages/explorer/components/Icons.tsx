@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { useTheme } from "styled-components";
+import { colorSecondaryBase } from "../../../theme.css";
 
-export const SeeMoreIcon: FC<JSX.IntrinsicElements["svg"]> = (props) => (
+export const SeeMoreIcon: FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg width="13" height="9" viewBox="0 0 13 9" fill="none" {...props}>
     <rect width="13" height="9" rx="2" fill="#11171A" />
     <rect
@@ -22,12 +22,11 @@ export const SeeMoreIcon: FC<JSX.IntrinsicElements["svg"]> = (props) => (
 );
 
 export const CacheOutcomeIcon: FC<
-  JSX.IntrinsicElements["svg"] & {
+  React.SVGProps<SVGSVGElement> & {
     state?: "hit" | "miss" | "partial";
   }
 > = ({ state, ...props }) => {
-  const { colors } = useTheme();
-  const fillColor = colors.secondary.base;
+  const fillColor = colorSecondaryBase;
 
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" {...props}>

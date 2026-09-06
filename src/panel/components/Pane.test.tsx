@@ -43,14 +43,14 @@ describe("on mouse down", () => {
   beforeEach(() => {
     const wrapper = shallow(<Pane />);
     wrapper
-      .find("DraggingEdge")
+      .find('[role="seperator"]')
       .simulate("mouseDown", { button: 0, preventDefault: jest.fn() });
   });
   it("listens for mouse up events", () => {
-    expect(addEventListener).toBeCalledWith("mouseup", expect.any(Function));
+    expect(addEventListener).toHaveBeenCalledWith("mouseup", expect.any(Function));
   });
 
   it("listens for mouse move events", () => {
-    expect(addEventListener).toBeCalledWith("mousemove", expect.any(Function));
+    expect(addEventListener).toHaveBeenCalledWith("mousemove", expect.any(Function));
   });
 });

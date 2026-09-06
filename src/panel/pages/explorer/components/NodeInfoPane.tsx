@@ -7,12 +7,18 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-import styled from "styled-components";
-import { rem } from "polished";
 import { ParsedFieldNode } from "../../../context/Explorer/ast";
 import { Pane, CodeHighlight } from "../../../components";
 import { ExplorerContext } from "../../../context";
 import { CacheOutcomeIcon } from "./Icons";
+import {
+  expandPrompt,
+  name,
+  description,
+  textContainer,
+  text,
+  cacheIcon,
+} from "./NodeInfoPane.css";
 
 export const NodeInfoPane: FC<ComponentProps<typeof Pane>> = (props) => {
   const { focusedNode } = useContext(ExplorerContext);
@@ -20,9 +26,9 @@ export const NodeInfoPane: FC<ComponentProps<typeof Pane>> = (props) => {
   const content = useMemo(() => {
     if (!focusedNode) {
       return (
-        <TextContainer>
-          <Text>Select a node to see more information...</Text>
-        </TextContainer>
+        <div className={textContainer}>
+          <p className={text}>Select a node to see more information...</p>
+        </div>
       );
     }
 
@@ -63,13 +69,13 @@ const NodeInfoContent: FC<{ node: ParsedFieldNode }> = ({ node }) => {
     <>
       <Pane.Item>
         <Pane.ItemTitle>Name</Pane.ItemTitle>
-        <Name>{node.name}</Name>
+        <code className={name}>{node.name}</code>
       </Pane.Item>
       {node.cacheOutcome ? (
         <Pane.Item>
           <Pane.ItemTitle>Cache Outcome</Pane.ItemTitle>
-          <CacheIcon state={node.cacheOutcome} />
-          <Name>{node.cacheOutcome}</Name>
+          <CacheOutcomeIcon state={node.cacheOutcome} className={cacheIcon} />
+          <code className={name}>{node.cacheOutcome}</code>
           {getDescription(node.cacheOutcome)}
         </Pane.Item>
       ) : null}
@@ -88,9 +94,9 @@ const NodeInfoContent: FC<{ node: ParsedFieldNode }> = ({ node }) => {
           {isExpanded ? (
             <CodeHighlight code={value} language="javascript" />
           ) : (
-            <ExpandPrompt role={"button"} onClick={handleReveal}>
+            <div role={"button"} onClick={handleReveal} className={expandPrompt}>
               Click to expand
-            </ExpandPrompt>
+            </div>
           )}
         </Pane.Item>
       ) : null}
@@ -101,18 +107,18 @@ const NodeInfoContent: FC<{ node: ParsedFieldNode }> = ({ node }) => {
 const getDescription = (status: ParsedFieldNode["cacheOutcome"]) => {
   switch (status) {
     case "hit": {
-      return <Description>{"This result was served from cache."}</Description>;
+      return <p className={description}>{"This result was served from cache."}</p>;
     }
     case "partial": {
       return (
-        <Description>
+        <p className={description}>
           {"Some values for this result were served from cache."}
-        </Description>
+        </p>
       );
     }
     case "miss": {
       return (
-        <Description>{"This result wasn't served from cache"}</Description>
+        <p className={description}>{"This result wasn't served from cache"}</p>
       );
     }
     default: {
@@ -120,37 +126,3 @@ const getDescription = (status: ParsedFieldNode["cacheOutcome"]) => {
     }
   }
 };
-
-const ExpandPrompt = styled.div`
-  text-align: center;
-  padding: ${(p) => p.theme.space[5]};
-  background: ${(p) => p.theme.colors.canvas.elevated05};
-  color: ${(p) => p.theme.colors.textDimmed.base};
-  cursor: pointer;
-`;
-
-const Name = styled.code`
-  color: ${(p) => p.theme.colors.textDimmed.base};
-`;
-
-const Description = styled.p`
-  color: ${(p) => p.theme.colors.textDimmed.base};
-  margin-bottom: 0;
-  margin-top: ${(p) => p.theme.space[2]};
-`;
-
-const TextContainer = styled.div`
-  padding: ${(p) => p.theme.space[6]};
-`;
-
-const Text = styled.p`
-  margin: 0;
-  text-align: center;
-  color: ${(p) => p.theme.colors.textDimmed.base};
-`;
-
-const CacheIcon = styled(CacheOutcomeIcon)`
-  position: relative;
-  top: ${rem(1)};
-  margin-right: ${(p) => p.theme.space[3]};
-`;

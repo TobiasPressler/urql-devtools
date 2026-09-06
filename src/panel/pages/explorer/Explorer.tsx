@@ -1,53 +1,31 @@
-import React, { useContext, FC, ComponentProps } from "react";
-import styled from "styled-components";
-import { Background } from "../../components";
+import React, { useContext } from "react";
 import { ExplorerContext } from "../../context";
 import { Tree, NodeInfoPane } from "./components";
+import {
+  container,
+  listContainer,
+  titleWrapper,
+  title,
+  description,
+} from "./Explorer.css";
+import { Background } from "../../components";
 
-export const Explorer: FC<ComponentProps<typeof Container>> = (props) => {
+export const Explorer: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
   const { operations } = useContext(ExplorerContext);
 
   return (
-    <Container {...props}>
-      <ListContainer>
+    <Background {...props} className={`${container} ${props.className || ""}`}>
+      <section className={listContainer}>
         {Object.keys(operations).length ? (
           <Tree nodeMap={operations} />
         ) : (
-          <TitleWrapper>
-            <Title>Responses will be shown here</Title>
-            <Description>Make a new request or refresh the page</Description>
-          </TitleWrapper>
+          <div className={titleWrapper}>
+            <h2 className={title}>Responses will be shown here</h2>
+            <p className={description}>Make a new request or refresh the page</p>
+          </div>
         )}
-      </ListContainer>
+      </section>
       <NodeInfoPane />
-    </Container>
+    </Background>
   );
 };
-
-const Container = styled(Background)`
-  background-color: ${(p) => p.theme.colors.canvas.base};
-`;
-
-const ListContainer = styled.section`
-  flex: 2;
-  flex-basis: 70%;
-  overflow: auto;
-`;
-
-const TitleWrapper = styled.div`
-  padding: ${(p) => p.theme.space[6]};
-  color: ${(p) => p.theme.colors.textDimmed.base};
-  font-weight: normal;
-`;
-
-const Title = styled.h2`
-  font-weight: normal;
-  font-size: ${(p) => p.theme.fontSizes.body.xl};
-  line-height: ${(p) => p.theme.lineHeights.body.xl};
-  color: ${(p) => p.theme.colors.text.base};
-  margin: 0;
-`;
-
-const Description = styled.p`
-  margin-top: ${(p) => p.theme.space[3]};
-`;

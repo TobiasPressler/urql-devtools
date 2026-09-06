@@ -23,7 +23,7 @@ describe("on mount", () => {
 describe("on tab click", () => {
   it("calls setActive", () => {
     const wrapper = shallow(<Tabs {...props} />);
-    wrapper.find("Tab:last-child").simulate("click");
-    expect(props.setActive).toBeCalledWith("b");
+    wrapper.find("h3:last-child").simulate("click");
+    expect(props.setActive).toHaveBeenCalledWith("b");
   });
 });

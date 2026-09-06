@@ -1,8 +1,7 @@
 import React, { useContext, useMemo } from "react";
-import styled from "styled-components";
-import { rem } from "polished";
 import { RequestContext } from "../../../context";
 import { CodeHighlight, Pane } from "../../../components";
+import { prompt, status, icon } from "./Response.css";
 
 export const Response: React.FC = () => {
   const { fetching, response, error } = useContext(RequestContext);
@@ -47,16 +46,16 @@ export const Response: React.FC = () => {
 
   return useMemo(() => {
     if (state === "Idle") {
-      return <Prompt>Run a query to see what the client returns...</Prompt>;
+      return <div className={prompt}>Run a query to see what the client returns...</div>;
     }
 
     return (
       <>
         <Pane.Item>
           <Pane.ItemTitle>State</Pane.ItemTitle>
-          <Status>
-            <Icon data-state={state.toLowerCase()} /> {state}
-          </Status>
+          <code className={status}>
+            <span data-state={state.toLowerCase()} className={icon} /> {state}
+          </code>
         </Pane.Item>
 
         {code && (
@@ -69,45 +68,3 @@ export const Response: React.FC = () => {
     );
   }, [code, state]);
 };
-
-const Prompt = styled.div`
-  padding: ${(p) => p.theme.space[6]};
-  text-align: center;
-  color: ${(p) => p.theme.colors.textDimmed.base};
-`;
-
-const Status = styled.code`
-  color: ${(p) => p.theme.colors.textDimmed.base};
-  font-size: ${(p) => p.theme.fontSizes.body.m};
-  line-height: ${(p) => p.theme.lineHeights.body.m};
-  display: flex;
-  align-items: center;
-`;
-
-const Icon = styled.span`
-  display: block;
-  margin-right: ${(p) => p.theme.space[3]};
-  width: ${rem(9)};
-  height: ${rem(9)};
-  box-sizing: border-box;
-  border: solid 1px;
-  border-radius: 50%;
-
-  &[data-state="idle"] {
-    border-color: ${(p) => p.theme.colors.divider.base};
-  }
-
-  &[data-state="fetching"] {
-    border-color: ${(p) => p.theme.colors.pending.base};
-  }
-
-  &[data-state="success"] {
-    border-color: ${(p) => p.theme.colors.success.base};
-    background-color: ${(p) => p.theme.colors.success.base};
-  }
-
-  &[data-state="error"] {
-    border-color: ${(p) => p.theme.colors.error.base};
-    background-color: ${(p) => p.theme.colors.error.base};
-  }
-`;

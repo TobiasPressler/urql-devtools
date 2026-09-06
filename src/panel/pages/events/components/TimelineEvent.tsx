@@ -3,10 +3,9 @@ import React, {
   PropsWithChildren,
   useMemo,
   useState,
-  ComponentProps,
   useCallback,
+  CSSProperties,
 } from "react";
-import styled from "styled-components";
 import { DebugEvent } from "@urql/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretSquareUp } from "@fortawesome/free-solid-svg-icons";
@@ -15,26 +14,9 @@ import OtherIcon from "../../../../assets/events/other.svg";
 import TeardownIcon from "../../../../assets/events/teardown.svg";
 import UpdateIcon from "../../../../assets/events/update.svg";
 import { useTooltip, TimelineTooltip } from "./TimelineTooltip";
+import { svg, svgContainer, eventPopout } from "./TimelineEvent.css";
 
-const Svg = styled.svg`
-  cursor: pointer;
-  filter: brightness(1);
-  transition: filter 300ms ease;
-
-  & > * {
-    fill: ${(p) => p.theme.colors.textDimmed.base};
-  }
-
-  &:hover > * {
-    fill: ${(p) => p.theme.colors.textDimmed.hover};
-  }
-
-  &:active > * {
-    fill: ${(p) => p.theme.colors.textDimmed.active};
-  }
-`;
-
-const eventGroupIcon: Record<string, any> = {
+const eventGroupIcon: Record<string, FC<React.SVGProps<SVGSVGElement>>> = {
   execution: ExecutionIcon,
   update: UpdateIcon,
   teardown: TeardownIcon,
@@ -44,8 +26,10 @@ const eventGroupIcon: Record<string, any> = {
 export const TimelineEvent: FC<
   {
     event: DebugEvent;
-  } & ComponentProps<typeof Svg>
-> = ({ event, ...svgProps }) => {
+    style?: CSSProperties;
+    onClick?: () => void;
+  }
+> = ({ event, style, onClick }) => {
   const { ref, tooltipProps, isVisible } = useTooltip();
 
   const iconSize = useMemo(
@@ -65,12 +49,13 @@ export const TimelineEvent: FC<
 
   return (
     <>
-      <Svg
-        as={Icon}
-        {...svgProps}
+      <Icon
         width={iconSize}
         height={iconSize}
-        ref={ref}
+        ref={ref as React.Ref<SVGSVGElement>}
+        style={style}
+        onClick={onClick}
+        className={svg}
       />
       {isVisible && (
         <TimelineTooltip {...tooltipProps}>{event.message}</TimelineTooltip>
@@ -79,7 +64,12 @@ export const TimelineEvent: FC<
   );
 };
 
-export const TimelineEventGroup: FC<PropsWithChildren<ComponentProps<typeof Svg>>> = ({
+export const TimelineEventGroup: FC<
+  PropsWithChildren<React.HTMLAttributes<HTMLSpanElement> & {
+    style?: CSSProperties;
+    onClick?: () => void;
+  }>
+> = ({
   children,
   ...props
 }) => {
@@ -90,35 +80,19 @@ export const TimelineEventGroup: FC<PropsWithChildren<ComponentProps<typeof Svg>
 
   return (
     <>
-      <SvgContainer ref={ref} {...props}>
-        <Svg
-          as={FontAwesomeIcon}
+      <span ref={ref as React.Ref<HTMLSpanElement>} {...props} className={`${svgContainer} ${props.className || ""}`}>
+        <FontAwesomeIcon
           icon={faCaretSquareUp}
           onClick={() => setExpanded((e) => !e)}
           style={{ width: 10, height: 10 }}
+          className={svg}
         />
-      </SvgContainer>
+      </span>
       {isExpanded && (
-        <EventPopout {...tooltipProps} onMouseLeave={handleMouseLeave}>
+        <div {...tooltipProps} onMouseLeave={handleMouseLeave} className={eventPopout}>
           {children}
-        </EventPopout>
+        </div>
       )}
     </>
   );
 };
-
-/** Container to get SVG ref :/ */
-const SvgContainer = styled.span`
-  display: flex;
-`;
-
-const EventPopout = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: ${(p) => p.theme.colors.canvas.elevated05};
-  padding: ${(p) => p.theme.space[2]};
-
-  & > * + * {
-    margin-left: ${(p) => p.theme.space[2]};
-  }
-`;

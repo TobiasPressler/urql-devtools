@@ -48,8 +48,8 @@ describe("on mount", () => {
   });
 
   it("sends an init message w/ tabId", () => {
-    expect(connection.postMessage).toBeCalledTimes(1);
-    expect(connection.postMessage).toBeCalledWith({
+    expect(connection.postMessage).toHaveBeenCalled();
+    expect(connection.postMessage).toHaveBeenCalledWith({
       type: "connection-init",
       tabId: chrome.devtools.inspectedWindow.tabId,
       source: "devtools",
@@ -83,8 +83,8 @@ describe("on message", () => {
       sendMessage(message);
     });
 
-    expect(handler).toBeCalledTimes(1);
-    expect(handler).toBeCalledWith(message);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(message);
   });
 
   describe("on exchange init", () => {
@@ -229,6 +229,6 @@ describe("on sendMessage", () => {
 
     state.sendMessage(message);
 
-    expect(connection.postMessage).toBeCalledWith(message);
+    expect(connection.postMessage).toHaveBeenCalledWith(message);
   });
 });
