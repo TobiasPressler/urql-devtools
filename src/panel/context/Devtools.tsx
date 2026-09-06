@@ -69,25 +69,34 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
   >({});
 
   const initConnection = useCallback(() => {
-    const conn = createConnection();
-    connectionRef.current = conn;
+    try {
+      const conn = createConnection();
+      connectionRef.current = conn;
 
-    conn.onMessage.addListener((msg: ExchangeMessage | DevtoolsMessage) => {
-      if (msg?.source !== "exchange") {
-        return;
-      }
-      Object.values(messageHandlers.current).forEach((h) => h(msg));
-    });
-
-    if (process.env.BUILD_ENV === "extension") {
-      (conn as chrome.runtime.Port).onDisconnect.addListener(() => {
-        connectionRef.current = null;
-        setClient({ connected: false });
+      conn.onMessage.addListener((msg: ExchangeMessage | DevtoolsMessage) => {
+        if (msg?.source !== "exchange") {
+          return;
+        }
+        Object.values(messageHandlers.current).forEach((h) => h(msg));
       });
-    }
 
-    sendInitMessage(conn);
-    return conn;
+      if (process.env.BUILD_ENV === "extension") {
+        (conn as chrome.runtime.Port).onDisconnect.addListener(() => {
+          connectionRef.current = null;
+          setClient({ connected: false });
+        });
+      }
+
+      sendInitMessage(conn);
+      return conn;
+    } catch {
+      // Extension context invalidated (e.g. reloading the extension while
+      // this devtools panel stayed open) — there's no way to recover short
+      // of reopening the panel. Leave connectionRef null so callers keep
+      // retrying harmlessly instead of crashing.
+      connectionRef.current = null;
+      return undefined;
+    }
   }, []);
 
   const sendMessage = useCallback<DevtoolsContextType["sendMessage"]>(
@@ -132,8 +141,15 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
     const timer = setInterval(() => {
       if (!connectionRef.current) {
         initConnection();
-      } else {
+        return;
+      }
+
+      try {
         sendInitMessage(connectionRef.current);
+      } catch {
+        // Extension context invalidated after the connection was made —
+        // drop it so the next tick retries via initConnection() instead.
+        connectionRef.current = null;
       }
     }, 2000);
 
@@ -155,11 +171,17 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
       }
 
       if (message.type === "connection-init" && connectionRef.current) {
-        connectionRef.current.postMessage({
-          type: "connection-acknowledge",
-          source: "devtools",
-          version: process.env.PKG_VERSION,
-        });
+        try {
+          connectionRef.current.postMessage({
+            type: "connection-acknowledge",
+            source: "devtools",
+            version: process.env.PKG_VERSION,
+          });
+        } catch {
+          // Extension context invalidated — drop the stale connection so
+          // the retry timer reconnects via initConnection() instead.
+          connectionRef.current = null;
+        }
       }
 
       return setClient({
