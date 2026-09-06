@@ -12,7 +12,8 @@
     "512": "/assets/icon-512.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
@@ -39,7 +40,11 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{c11f3a69-f159-4708-b044-853066c2d2fe}",
-      "strict_min_version": "42.0"
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "isExempt": true,
+        "description": "Urql Devtools does not collect any user data."
+      }
     }
   }
 }
