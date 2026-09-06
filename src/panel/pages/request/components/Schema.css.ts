@@ -1,5 +1,11 @@
 import { style } from "@vanilla-extract/css";
-import { colorTextBase, colorTextDimmedBase, fontSizeBodyM, lineHeightBodyM, space3 } from "../../../theme.css";
+import {
+  colorTextBase,
+  colorTextDimmedBase,
+  fontSizeBodyM,
+  lineHeightBodyM,
+  space3,
+} from "../../../theme.css";
 
 export const flexContainer = style({
   flex: 1,

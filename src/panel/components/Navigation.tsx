@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Icon from "../../assets/icon.svg";
-import { container, item, logo } from "./Navigation.css";
 import { useNavigationContext } from "../App";
+import { container, item, logo } from "./Navigation.css";
 
 type NavItem = { link: string; label: string };
 
@@ -30,7 +30,7 @@ export const Navigation: FC<
       <a
         href="https://formidable.com/open-source/urql/"
         target="_blank"
-        rel="noopener"
+        rel="noopener noreferrer"
         title="urql Documentation"
         className={item.alignRight}
       >

@@ -1,5 +1,14 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasBase, colorCodeblockBg, colorDividerBase, colorTextBase, fontSizeBodyM, lineHeightBodyM, space2, space3 } from "../theme.css";
+import {
+  colorCanvasBase,
+  colorCodeblockBg,
+  colorDividerBase,
+  colorTextBase,
+  fontSizeBodyM,
+  lineHeightBodyM,
+  space2,
+  space3,
+} from "../theme.css";
 
 export const container = style({
   position: "relative",

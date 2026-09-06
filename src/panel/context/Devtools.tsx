@@ -1,6 +1,6 @@
 import { DevtoolsMessage, ExchangeMessage } from "@urql/devtools";
 import semver from "semver";
-import React, {
+import {
   createContext,
   useEffect,
   PropsWithChildren,
@@ -32,13 +32,15 @@ export interface DevtoolsContextType {
 const REQUIRED_VERSION = "2.0.0";
 
 export const DevtoolsContext = createContext<DevtoolsContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useDevtoolsContext = (): DevtoolsContextType => {
   const context = useContext(DevtoolsContext);
   if (context === undefined) {
-    throw new Error("useDevtoolsContext must be used within a DevtoolsProvider");
+    throw new Error(
+      "useDevtoolsContext must be used within a DevtoolsProvider",
+    );
   }
   return context;
 };
@@ -60,7 +62,7 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
     connected: false,
   });
   const connectionRef = useRef<ReturnType<typeof createConnection> | null>(
-    null
+    null,
   );
   const messageHandlers = useRef<
     Record<string, (msg: ExchangeMessage) => void>
@@ -101,7 +103,7 @@ export const DevtoolsProvider: FC<PropsWithChildren> = ({ children }) => {
         setClient({ connected: false });
       }
     },
-    [initConnection]
+    [initConnection],
   );
 
   const addMessageHandler = useCallback<

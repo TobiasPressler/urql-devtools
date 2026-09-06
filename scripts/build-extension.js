@@ -3,7 +3,9 @@ const path = require("path");
 
 const root = path.resolve(__dirname, "..");
 const dist = path.resolve(root, "dist/extension");
-const pkg = JSON.parse(fs.readFileSync(path.resolve(root, "package.json"), "utf-8"));
+const pkg = JSON.parse(
+  fs.readFileSync(path.resolve(root, "package.json"), "utf-8"),
+);
 
 /** Recursively copy directory. */
 function copyDir(src, dest) {
@@ -27,10 +29,13 @@ console.log("Copied assets");
 
 // 2. Write manifest.json with version
 const manifest = JSON.parse(
-  fs.readFileSync(path.resolve(root, "src/extension/manifest.json"), "utf-8")
+  fs.readFileSync(path.resolve(root, "src/extension/manifest.json"), "utf-8"),
 );
 manifest.version = pkg.version;
-fs.writeFileSync(path.resolve(dist, "manifest.json"), JSON.stringify(manifest, null, 2));
+fs.writeFileSync(
+  path.resolve(dist, "manifest.json"),
+  JSON.stringify(manifest, null, 2),
+);
 console.log("Wrote manifest.json");
 
 // 3. Generate HTML files with CSP

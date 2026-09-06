@@ -1,5 +1,13 @@
 import { style } from "@vanilla-extract/css";
-import { colorTextBase, colorTooltipBg, fontSizeBodyM, lineHeightBodyM, radiiS, space3, space4 } from "../../../theme.css";
+import {
+  colorTextBase,
+  colorTooltipBg,
+  fontSizeBodyM,
+  lineHeightBodyM,
+  radiiS,
+  space3,
+  space4,
+} from "../../../theme.css";
 
 export const tooltipElement = style({
   position: "relative",

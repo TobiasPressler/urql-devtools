@@ -1,5 +1,12 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasElevated05, colorTextDimmedBase, space2, space3, space5, space6 } from "../../../theme.css";
+import {
+  colorCanvasElevated05,
+  colorTextDimmedBase,
+  space2,
+  space3,
+  space5,
+  space6,
+} from "../../../theme.css";
 
 export const expandPrompt = style({
   textAlign: "center",

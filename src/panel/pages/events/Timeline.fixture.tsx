@@ -151,10 +151,9 @@ const defaultEvents: DebugEvent[] = [
   },
 ] as any;
 
-const DevtoolsContextMock: PropsWithChildren<{ events?: typeof defaultEvents }> = ({
-  children,
-  events = defaultEvents,
-}) => {
+const DevtoolsContextMock: PropsWithChildren<{
+  events?: typeof defaultEvents;
+}> = ({ children, events = defaultEvents }) => {
   return (
     <DevtoolsContext.Provider
       value={useMemo(
@@ -178,8 +177,8 @@ const DevtoolsContextMock: PropsWithChildren<{ events?: typeof defaultEvents }> 
 
               return () => clearInterval(interval);
             },
-          } as any),
-        []
+          }) as any,
+        [],
       )}
     >
       {children}

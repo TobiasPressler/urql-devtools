@@ -4,7 +4,9 @@ import { Pane } from "../../components";
 import { Query, Schema, Settings, Response } from "./components";
 import { page, pageContent, paneSection, schemaContainer } from "./Request.css";
 
-export const Request: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
+export const Request: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
+  props,
+) => {
   return (
     <Background {...props} className={`${page} ${props.className || ""}`}>
       <Settings />

@@ -1,5 +1,10 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasElevated05, colorCanvasElevated10, colorTextBase, radiiS } from "../../../theme.css";
+import {
+  colorCanvasElevated05,
+  colorCanvasElevated10,
+  colorTextBase,
+  radiiS,
+} from "../../../theme.css";
 
 export const timelineSourceIcon = style({
   borderRadius: radiiS,

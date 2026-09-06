@@ -10,11 +10,11 @@ import "codemirror-graphql/lint";
 import "codemirror-graphql/hint";
 import "codemirror-graphql/mode";
 import CodeMirror from "codemirror";
-
-type ShowHintOptions = any;
 import React, { useEffect, useState } from "react";
 import { useRequest } from "../../../context";
 import { container } from "./Query.css";
+
+type ShowHintOptions = any;
 
 export const Query: React.FC = () => {
   const [codemirror, setCodeMirror] = useState<CodeMirror.Editor | undefined>();
@@ -37,15 +37,15 @@ export const Query: React.FC = () => {
       return;
     }
 
-    codemirror.setOption("lint", ({ schema } as any));
-    codemirror.setOption("hintOptions", ({
+    codemirror.setOption("lint", { schema } as any);
+    codemirror.setOption("hintOptions", {
       schema,
-    } as unknown) as ShowHintOptions);
+    } as unknown as ShowHintOptions);
     codemirror.setOption("extraKeys", {
       "Ctrl-Space": () =>
-        codemirror.showHint(({
+        codemirror.showHint({
           completeSingle: true,
-        } as unknown) as ShowHintOptions),
+        } as unknown as ShowHintOptions),
     });
   }, [codemirror, schema]);
 

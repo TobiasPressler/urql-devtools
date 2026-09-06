@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { ExplorerContext } from "../../context";
+import { Background } from "../../components";
 import { Tree, NodeInfoPane } from "./components";
 import {
   container,
@@ -8,9 +9,10 @@ import {
   title,
   description,
 } from "./Explorer.css";
-import { Background } from "../../components";
 
-export const Explorer: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
+export const Explorer: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
+  props,
+) => {
   const { operations } = useContext(ExplorerContext);
 
   return (
@@ -21,7 +23,9 @@ export const Explorer: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) 
         ) : (
           <div className={titleWrapper}>
             <h2 className={title}>Responses will be shown here</h2>
-            <p className={description}>Make a new request or refresh the page</p>
+            <p className={description}>
+              Make a new request or refresh the page
+            </p>
           </div>
         )}
       </section>

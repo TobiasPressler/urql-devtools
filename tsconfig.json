@@ -13,5 +13,11 @@
     "types": ["@types/chrome", "jest"]
   },
   "include": ["src"],
-  "exclude": ["node_modules", "src/**/*.test.*", "src/**/*.fixture.*", "src/setupTests.ts", "src/panel/cosmos.*"]
+  "exclude": [
+    "node_modules",
+    "src/**/*.test.*",
+    "src/**/*.fixture.*",
+    "src/setupTests.ts",
+    "src/panel/cosmos.*"
+  ]
 }

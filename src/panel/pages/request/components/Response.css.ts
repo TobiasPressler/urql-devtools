@@ -1,5 +1,15 @@
 import { style } from "@vanilla-extract/css";
-import { colorDividerBase, colorErrorBase, colorPendingBase, colorSuccessBase, colorTextDimmedBase, fontSizeBodyM, lineHeightBodyM, space3, space6 } from "../../../theme.css";
+import {
+  colorDividerBase,
+  colorErrorBase,
+  colorPendingBase,
+  colorSuccessBase,
+  colorTextDimmedBase,
+  fontSizeBodyM,
+  lineHeightBodyM,
+  space3,
+  space6,
+} from "../../../theme.css";
 
 export const prompt = style({
   padding: space6,

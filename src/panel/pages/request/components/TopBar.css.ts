@@ -1,5 +1,13 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasElevated05, colorPrimaryBase, colorTextDimmedBase, fontSizeBodyS, lineHeightBodyS, space2, space3 } from "../../../theme.css";
+import {
+  colorCanvasElevated05,
+  colorPrimaryBase,
+  colorTextDimmedBase,
+  fontSizeBodyS,
+  lineHeightBodyS,
+  space2,
+  space3,
+} from "../../../theme.css";
 
 export const flexContainer = style({
   backgroundColor: colorCanvasElevated05,

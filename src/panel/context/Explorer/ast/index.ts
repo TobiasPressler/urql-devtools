@@ -42,13 +42,13 @@ export const handleResponse = ({
   }
 
   const opNode = operation.query.definitions.find(
-    (node) => node.kind === Kind.OPERATION_DEFINITION
+    (node) => node.kind === Kind.OPERATION_DEFINITION,
   ) as OperationDefinitionNode;
 
   if (!opNode) {
     throw new Error(
       "Invalid GraphQL document: All GraphQL documents must contain an OperationDefinition" +
-        "node for a query, subscription, or mutation."
+        "node for a query, subscription, or mutation.",
     );
   }
 
@@ -59,7 +59,7 @@ export const handleResponse = ({
         ...map,
         [node.name.value]: node,
       }),
-      {}
+      {},
     );
 
   if (opNode.selectionSet.selections.length === 0) {
@@ -69,7 +69,7 @@ export const handleResponse = ({
   return parseNodes({
     variables: getNormalizedVariables(
       opNode.variableDefinitions,
-      operation.variables as any
+      operation.variables as any,
     ),
     selections: opNode.selectionSet.selections,
     fragments,
@@ -168,7 +168,7 @@ const parseNodes = (copyArgs: CopyFromDataArgs): ParsedNodeMap => {
                       : [],
                     data,
                   }),
-            {}
+            {},
           ),
         },
       };

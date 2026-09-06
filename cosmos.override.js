@@ -29,7 +29,7 @@ module.exports = (c) => ({
     }),
     new webpack.ContextReplacementPlugin(
       /graphql-language-service-interface[\/\\]dist/,
-      /\.js$/
+      /\.js$/,
     ),
     ...c.plugins,
   ],

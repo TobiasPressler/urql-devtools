@@ -95,7 +95,7 @@ const DevtoolsContextMock: PropsWithChildren<
       sendMessage: () => false,
       ...val,
     }),
-    []
+    [],
   );
 
   return (

@@ -1,7 +1,6 @@
 jest.mock("./TimelineEvent", () => ({
-  TimelineEvent: () => <>TimelineEvent</> /* eslint-disable-line */,
+  TimelineEvent: () => <>TimelineEvent</>,
 }));
-import React from "react";
 import { mount } from "enzyme";
 import { ThemeDecorator } from "../../../cosmos.decorator";
 
@@ -18,7 +17,7 @@ describe("on fetching", () => {
       const { default: fixtures } = await import("./TimelineRow.fixture");
       dateNow.mockReturnValue(5000);
       const wrapper = mount(
-        <ThemeDecorator>{fixtures["network fetching"]}</ThemeDecorator>
+        <ThemeDecorator>{fixtures["network fetching"]}</ThemeDecorator>,
       );
 
       const duration = wrapper.find("NetworkDuration");
@@ -28,7 +27,7 @@ describe("on fetching", () => {
     it("grows to current time", async () => {
       const { default: fixtures } = await import("./TimelineRow.fixture");
       const wrapper = mount(
-        <ThemeDecorator>{fixtures["network fetching"]}</ThemeDecorator>
+        <ThemeDecorator>{fixtures["network fetching"]}</ThemeDecorator>,
       );
 
       const duration = wrapper.find("NetworkDuration");

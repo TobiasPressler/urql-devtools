@@ -7,7 +7,6 @@ jest.mock("./context/Devtools.tsx", () => {
     useDevtoolsContext: jest.fn(),
   };
 });
-import React from "react";
 import { shallow, mount } from "enzyme";
 import { App, AppRoutes } from "./App";
 import { useDevtoolsContext } from "./context";

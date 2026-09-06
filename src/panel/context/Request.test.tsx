@@ -1,5 +1,5 @@
 jest.mock("./Devtools");
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { mount } from "enzyme";
 import { act } from "react-dom/test-utils";
 import {
@@ -46,7 +46,7 @@ describe("on mount", () => {
     mount(
       <RequestProvider>
         <Fixture />
-      </RequestProvider>
+      </RequestProvider>,
     );
   });
 
@@ -90,7 +90,7 @@ describe("on remount", () => {
     mount(
       <RequestProvider>
         <Fixture />
-      </RequestProvider>
+      </RequestProvider>,
     );
   });
 
@@ -122,7 +122,7 @@ describe("on setQuery", () => {
     mount(
       <RequestProvider>
         <Fixture />
-      </RequestProvider>
+      </RequestProvider>,
     );
     act(() => {
       state.setQuery(query);
@@ -148,7 +148,7 @@ describe("on execute", () => {
     mount(
       <RequestProvider>
         <Fixture />
-      </RequestProvider>
+      </RequestProvider>,
     );
     sendMessage.mockClear();
     act(() => {
@@ -182,7 +182,7 @@ describe("on debug message", () => {
     mount(
       <RequestProvider>
         <Fixture />
-      </RequestProvider>
+      </RequestProvider>,
     );
     act(() => {
       state.execute();

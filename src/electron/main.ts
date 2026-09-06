@@ -28,7 +28,9 @@ const createWebsocketServer = () => {
       debug("WebSocket message:", JSON.parse(data));
       try {
         windows.forEach((w) => w.webContents.send("message", JSON.parse(data)));
-      } catch (err) {}
+      } catch (err) {
+        console.warn("Failed to forward message:", err);
+      }
     });
 
     ws.on("close", () => {
@@ -36,7 +38,7 @@ const createWebsocketServer = () => {
         w.webContents.send("message", {
           type: "connection-disconnect",
           source: "exchange",
-        })
+        }),
       );
     });
   });
@@ -56,7 +58,9 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   win.loadFile(`./shell/panel.html`);
-  process.env.NODE_ENV !== "production" && win.webContents.openDevTools();
+  if (process.env.NODE_ENV !== "production") {
+    win.webContents.openDevTools();
+  }
 };
 
 app.whenReady().then(() => {

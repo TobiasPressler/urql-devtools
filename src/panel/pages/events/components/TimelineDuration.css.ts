@@ -1,5 +1,12 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasElevated05, colorDividerBase, colorErrorBase, colorPendingBase, colorSuccessBase, space6 } from "../../../theme.css";
+import {
+  colorCanvasElevated05,
+  colorDividerBase,
+  colorErrorBase,
+  colorPendingBase,
+  colorSuccessBase,
+  space6,
+} from "../../../theme.css";
 
 export const timelineAliveDuration = style({
   height: space6,

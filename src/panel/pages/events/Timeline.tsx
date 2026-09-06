@@ -1,4 +1,4 @@
-import React, {
+import {
   FC,
   useMemo,
   useState,
@@ -82,20 +82,20 @@ export const Timeline: FC<TimelineProps> = (props) => {
             };
           })
         : [],
-    [scale]
+    [scale],
   );
 
   const handleSourceClick = useCallback(
     (o: Operation) => () => {
       setSelectedSource((current) =>
-        current && current.key === o.key ? undefined : o
+        current && current.key === o.key ? undefined : o,
       );
       const latest = [...events[o.key]]
         .reverse()
         .find((e) => e.type === "execution");
-      latest && setPosition(latest.timestamp - START_PADDING);
+      if (latest) setPosition(latest.timestamp - START_PADDING);
     },
-    [events, setPosition, setSelectedSource]
+    [events, setPosition, setSelectedSource],
   );
 
   const sources = useMemo<Operation[]>(
@@ -107,7 +107,7 @@ export const Timeline: FC<TimelineProps> = (props) => {
         }
         return source.operation;
       }),
-    [events, eventOrder]
+    [events, eventOrder],
   );
 
   const paneProps = useMemo(() => {
@@ -140,7 +140,7 @@ export const Timeline: FC<TimelineProps> = (props) => {
           ))}
         </>
       ),
-    [container, events, eventOrder, ticks, sources]
+    [container, events, eventOrder, ticks, sources],
   );
 
   return (
@@ -163,7 +163,12 @@ export const Timeline: FC<TimelineProps> = (props) => {
               />
             ))}
           </div>
-          <div ref={setContainer} draggable="true" key="TimelineList" className={timelineList}>
+          <div
+            ref={setContainer}
+            draggable="true"
+            key="TimelineList"
+            className={timelineList}
+          >
             {content}
           </div>
         </div>

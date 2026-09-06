@@ -1,4 +1,4 @@
-import React, {
+import {
   FC,
   useCallback,
   ComponentPropsWithoutRef,
@@ -58,7 +58,7 @@ export const CodeHighlight: FC<
       ref.appendChild(child);
       Prism.highlightElement(ref, code.length > 600);
     },
-    [language, code]
+    [language, code],
   );
 
   return (
@@ -95,13 +95,15 @@ export const InlineCodeHighlight: FC<
 
       const child = document.createElement("code");
       child.textContent = code;
-      ref.firstChild
-        ? ref.replaceChild(child, ref.firstChild)
-        : ref.appendChild(child);
+      if (ref.firstChild) {
+        ref.replaceChild(child, ref.firstChild);
+      } else {
+        ref.appendChild(child);
+      }
 
       Prism.highlightElement(ref, false);
     },
-    [language, code]
+    [language, code],
   );
 
   return (

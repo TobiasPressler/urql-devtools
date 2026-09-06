@@ -1,5 +1,14 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasBase, colorErrorBase, colorTextBase, colorTextDimmedBase, fontSizeDisplayL, space3, space6, space9 } from "../../theme.css";
+import {
+  colorCanvasBase,
+  colorErrorBase,
+  colorTextBase,
+  colorTextDimmedBase,
+  fontSizeDisplayL,
+  space3,
+  space6,
+  space9,
+} from "../../theme.css";
 
 export const content = style({
   display: "flex",

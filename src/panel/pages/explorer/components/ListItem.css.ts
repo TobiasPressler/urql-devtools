@@ -1,5 +1,18 @@
 import { style } from "@vanilla-extract/css";
-import { colorCanvasElevated05, colorDividerBase, colorTextBase, colorTextDimmedBase, fontSizeBodyM, fontSizeBodyS, lineHeightBodyM, lineHeightBodyS, radiiS, space1, space2, space4 } from "../../../theme.css";
+import {
+  colorCanvasElevated05,
+  colorDividerBase,
+  colorTextBase,
+  colorTextDimmedBase,
+  fontSizeBodyM,
+  fontSizeBodyS,
+  lineHeightBodyM,
+  lineHeightBodyS,
+  radiiS,
+  space1,
+  space2,
+  space4,
+} from "../../../theme.css";
 
 export const listItemKeyVal = style({
   margin: 0,

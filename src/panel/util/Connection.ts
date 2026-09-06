@@ -6,7 +6,7 @@ export interface ConnectionType {
   onMessage: {
     addListener: (cb: (msg: ExchangeMessage | DevtoolsMessage) => void) => void;
     removeListener: (
-      cb: (msg: ExchangeMessage | DevtoolsMessage) => void
+      cb: (msg: ExchangeMessage | DevtoolsMessage) => void,
     ) => void;
   };
 }
@@ -25,7 +25,7 @@ export const createConnection = (): ConnectionType => {
     .ipcRenderer as import("electron").IpcRenderer;
 
   ipcRenderer.on("message", (_event, message) =>
-    listeners.forEach((l) => l(message))
+    listeners.forEach((l) => l(message)),
   );
   return {
     postMessage: (m) => ipcRenderer.send("message", m),

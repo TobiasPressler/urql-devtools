@@ -23,13 +23,13 @@ export const Settings: FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
 
   const handleBackClick = useCallback(
     () => setPosition(startTime - START_PADDING),
-    [setPosition, startTime]
+    [setPosition, startTime],
   );
 
-  const handleForwardClick = useCallback(() => setPosition(Date.now()), [
-    setPosition,
-    startTime,
-  ]);
+  const handleForwardClick = useCallback(
+    () => setPosition(Date.now()),
+    [setPosition, startTime],
+  );
 
   return (
     <div {...props} className={`${container} ${props.className || ""}`}>
@@ -82,7 +82,7 @@ export const Filter: FC = () => {
           ? state.source.filter((f) => f !== v)
           : [...state.source, v],
       })),
-    [setFilter]
+    [setFilter],
   );
 
   const handleTypeToggle = useCallback(
@@ -93,7 +93,7 @@ export const Filter: FC = () => {
           ? state.graphqlType.filter((f) => f !== v)
           : [...state.graphqlType, v],
       })),
-    [setFilter]
+    [setFilter],
   );
 
   return (

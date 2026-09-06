@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useState,
   useEffect,
@@ -21,7 +21,7 @@ export interface ExplorerContextValue {
 
 export const ExplorerContext = createContext<ExplorerContextValue>(null as any);
 
-export const ExplorerProvider: FC<PropsWithChildren>  = ({ children }) => {
+export const ExplorerProvider: FC<PropsWithChildren> = ({ children }) => {
   const { addMessageHandler } = useDevtoolsContext();
   const [operations, setOperations] = useState<
     ExplorerContextValue["operations"]
@@ -29,9 +29,8 @@ export const ExplorerProvider: FC<PropsWithChildren>  = ({ children }) => {
   const [expandedNodes, setExpandedNodes] = useState<
     ExplorerContextValue["expandedNodes"]
   >([]);
-  const [focusedNode, setFocusedNode] = useState<
-    ExplorerContextValue["focusedNode"]
-  >(undefined);
+  const [focusedNode, setFocusedNode] =
+    useState<ExplorerContextValue["focusedNode"]>(undefined);
 
   useEffect(() => {
     return addMessageHandler((message) => {
@@ -52,7 +51,7 @@ export const ExplorerProvider: FC<PropsWithChildren>  = ({ children }) => {
             operation: debugEvent.operation,
             data: debugEvent.data.value,
             parsedNodes: operations,
-          })
+          }),
         );
         return;
       }
@@ -67,7 +66,7 @@ export const ExplorerProvider: FC<PropsWithChildren>  = ({ children }) => {
       setFocusedNode,
       operations,
     }),
-    [operations, focusedNode, setFocusedNode, expandedNodes, setExpandedNodes]
+    [operations, focusedNode, setFocusedNode, expandedNodes, setExpandedNodes],
   );
 
   return (

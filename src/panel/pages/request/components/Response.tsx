@@ -46,7 +46,11 @@ export const Response: React.FC = () => {
 
   return useMemo(() => {
     if (state === "Idle") {
-      return <div className={prompt}>Run a query to see what the client returns...</div>;
+      return (
+        <div className={prompt}>
+          Run a query to see what the client returns...
+        </div>
+      );
     }
 
     return (

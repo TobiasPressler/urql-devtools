@@ -1,6 +1,6 @@
 import "./App.css";
 import "./global.css";
-import { createContext, FC, use, useContext, useLayoutEffect, useState } from "react";
+import { createContext, FC, use, useLayoutEffect, useState } from "react";
 import { Activity } from "react";
 import {
   Disconnected,
@@ -55,7 +55,9 @@ const NavigationContext = createContext<{
 export const useNavigationContext = () => {
   const context = use(NavigationContext);
   if (!context) {
-    throw new Error("useNavigationContext must be used within a NavigationContext.Provider");
+    throw new Error(
+      "useNavigationContext must be used within a NavigationContext.Provider",
+    );
   }
   return context;
 };
@@ -64,7 +66,7 @@ const RoutedContent: FC = () => {
   const { active } = useNavigationContext();
 
   return (
-   <>
+    <>
       <Activity mode={active === "/events" ? "visible" : "hidden"}>
         <TimelineProvider>
           <Timeline />
@@ -75,11 +77,7 @@ const RoutedContent: FC = () => {
           <Request />
         </RequestProvider>
       </Activity>
-      <Activity
-        mode={
-          active === "/explorer" ? "visible" : "hidden"
-        }
-      >
+      <Activity mode={active === "/explorer" ? "visible" : "hidden"}>
         <ExplorerProvider>
           <Explorer />
         </ExplorerProvider>
@@ -89,7 +87,9 @@ const RoutedContent: FC = () => {
 };
 
 export const AppRoutes: FC = () => {
-  const [active, setActive] = useState<"/explorer" | "/events" | "/request">("/explorer");
+  const [active, setActive] = useState<"/explorer" | "/events" | "/request">(
+    "/explorer",
+  );
   const { client } = useDevtoolsContext();
 
   if (!client.connected) {
@@ -101,7 +101,7 @@ export const AppRoutes: FC = () => {
   }
 
   return (
-     <NavigationContext.Provider value={{ active, setActive }}>
+    <NavigationContext.Provider value={{ active, setActive }}>
       <Navigation
         items={[
           { link: "/explorer", label: "Explorer" },

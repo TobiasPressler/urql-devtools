@@ -1,5 +1,15 @@
 import { style, globalStyle } from "@vanilla-extract/css";
-import { colorCanvasBase, colorDividerBase, colorTextBase, fontSizeBodyM, lineHeightBodyM, space1, space3, space6, space8 } from "../../theme.css";
+import {
+  colorCanvasBase,
+  colorDividerBase,
+  colorTextBase,
+  fontSizeBodyM,
+  lineHeightBodyM,
+  space1,
+  space3,
+  space6,
+  space8,
+} from "../../theme.css";
 
 export const page = style({
   background: colorCanvasBase,

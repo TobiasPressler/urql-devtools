@@ -1,6 +1,6 @@
 jest.mock("../Devtools");
 jest.mock("./ast");
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { mount } from "enzyme";
 import { act } from "react-dom/test-utils";
 import { useDevtoolsContext } from "../Devtools";
@@ -39,7 +39,7 @@ describe("on mount", () => {
     mount(
       <ExplorerProvider>
         <Fixture />
-      </ExplorerProvider>
+      </ExplorerProvider>,
     );
   });
 
@@ -69,7 +69,7 @@ describe("DebugMessage", () => {
       mount(
         <ExplorerProvider>
           <Fixture />
-        </ExplorerProvider>
+        </ExplorerProvider>,
       );
     });
   });
@@ -80,7 +80,7 @@ describe("DebugMessage", () => {
       expect.objectContaining({
         operation: defaultEvents[0].data.operation,
         data: defaultEvents[0].data.data.value,
-      })
+      }),
     );
   });
 });
@@ -94,7 +94,7 @@ describe("unknown message", () => {
       mount(
         <ExplorerProvider>
           <Fixture />
-        </ExplorerProvider>
+        </ExplorerProvider>,
       );
     });
     expect(addMessageHandler).toHaveBeenCalledTimes(1);
@@ -110,17 +110,17 @@ describe("disconnect message", () => {
       mount(
         <ExplorerProvider>
           <Fixture />
-        </ExplorerProvider>
+        </ExplorerProvider>,
       );
     });
     addMessageHandler.mockImplementationOnce((cb) =>
-      cb({ type: "disconnect" })
+      cb({ type: "disconnect" }),
     );
     await act(async () => {
       mount(
         <ExplorerProvider>
           <Fixture />
-        </ExplorerProvider>
+        </ExplorerProvider>,
       );
     });
   });
@@ -132,7 +132,7 @@ describe("disconnect message", () => {
     expect(state).toEqual(
       expect.objectContaining({
         operations: {},
-      })
+      }),
     );
   });
 });

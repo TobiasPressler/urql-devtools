@@ -1,5 +1,15 @@
 import { style, globalStyle } from "@vanilla-extract/css";
-import { colorSyntaxDescription, colorSyntaxInvalid, colorSyntaxProperty, colorSyntaxString, colorTextBase, fontSizeBodyL, lineHeightBodyL, space2, space3 } from "../../../theme.css";
+import {
+  colorSyntaxDescription,
+  colorSyntaxInvalid,
+  colorSyntaxProperty,
+  colorSyntaxString,
+  colorTextBase,
+  fontSizeBodyL,
+  lineHeightBodyL,
+  space2,
+  space3,
+} from "../../../theme.css";
 
 export const description = style({
   color: colorSyntaxString,

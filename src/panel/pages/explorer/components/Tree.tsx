@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { ParsedNodeMap, ParsedFieldNode } from "../../../context/Explorer/ast";
 import { ListItem, SystemListItem } from "./ListItem";
 import { list } from "./Tree.css";
@@ -21,7 +21,7 @@ export const Tree: FC<TreeProps> = ({ nodeMap, depth = 0, index }) => {
           (map, index) =>
             map && (
               <Tree key={index} nodeMap={map} depth={depth} index={index} />
-            )
+            ),
         )}
       </>
     );
@@ -30,10 +30,10 @@ export const Tree: FC<TreeProps> = ({ nodeMap, depth = 0, index }) => {
   const fields = Object.values(nodeMap);
   const typenameField = fields.find((x) => x.name === "__typename");
   const childrenFields = sortFields(
-    fields.filter((x) => x.children !== undefined)
+    fields.filter((x) => x.children !== undefined),
   );
   const scalarFields = sortFields(
-    fields.filter((x) => x.children === undefined && x.name !== "__typename")
+    fields.filter((x) => x.children === undefined && x.name !== "__typename"),
   );
   const role = depth === 0 ? "tree" : "group";
 

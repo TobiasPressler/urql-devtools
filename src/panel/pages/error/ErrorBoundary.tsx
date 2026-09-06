@@ -45,7 +45,10 @@ export class ErrorBoundary extends Component<
     }
 
     return (
-      <div {...this.props} className={`${container} ${this.props.className || ""}`}>
+      <div
+        {...this.props}
+        className={`${container} ${this.props.className || ""}`}
+      >
         <div className={content}>
           <FontAwesomeIcon icon={faBug} className={bugIcon} />
           <h1 className={header}>Unexpected Error</h1>
@@ -53,7 +56,11 @@ export class ErrorBoundary extends Component<
             Something went wrong and {"we're"} not totally sure why...
           </p>
           <div className={buttonArray}>
-            <button data-type="icon" onClick={this.handleReloadClick} className={button}>
+            <button
+              data-type="icon"
+              onClick={this.handleReloadClick}
+              className={button}
+            >
               <FontAwesomeIcon icon={faRedoAlt} />
             </button>
             <button onClick={this.handleReportClick} className={button}>
@@ -62,7 +69,11 @@ export class ErrorBoundary extends Component<
           </div>
         </div>
         <div className={content}>
-          <CodeHighlight code={this.state.error.stack || ""} language="javascript" className={code} />
+          <CodeHighlight
+            code={this.state.error.stack || ""}
+            language="javascript"
+            className={code}
+          />
         </div>
       </div>
     );

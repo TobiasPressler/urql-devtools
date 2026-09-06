@@ -1,5 +1,19 @@
 import { style } from "@vanilla-extract/css";
-import { colorSyntaxBase, colorSyntaxEnum, colorSyntaxInput, colorSyntaxInterface, colorSyntaxScalar, colorSyntaxType, colorSyntaxUnion, colorTextBase, colorTextDimmedBase, fontSizeBodyL, lineHeightBodyL, space2, space3 } from "../../../theme.css";
+import {
+  colorSyntaxBase,
+  colorSyntaxEnum,
+  colorSyntaxInput,
+  colorSyntaxInterface,
+  colorSyntaxScalar,
+  colorSyntaxType,
+  colorSyntaxUnion,
+  colorTextBase,
+  colorTextDimmedBase,
+  fontSizeBodyL,
+  lineHeightBodyL,
+  space2,
+  space3,
+} from "../../../theme.css";
 
 export const stackWrapper = style({
   boxSizing: "border-box",

@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   Dispatch,
   useRef,
@@ -110,7 +110,7 @@ const useTimelineDomain = () => {
       ref.current = r;
       createScale();
     },
-    []
+    [],
   );
 
   const handlePan = useCallback(
@@ -132,7 +132,7 @@ const useTimelineDomain = () => {
         start: Math.max(startTime.current - START_PADDING, newStart),
       };
     },
-    [scale]
+    [scale],
   );
 
   const handleZoom = useCallback((e: WheelEvent) => {
@@ -258,11 +258,11 @@ const useTimelineDomain = () => {
       zoomIn,
       zoomOut,
     }),
-    [scale, setContainer]
+    [scale, setContainer],
   );
 };
 
-export const TimelineProvider: FC<PropsWithChildren>  = ({ children }) => {
+export const TimelineProvider: FC<PropsWithChildren> = ({ children }) => {
   const { addMessageHandler } = useDevtoolsContext();
   const domain = useTimelineDomain();
   const [filterables, setFilterables] = useState<
@@ -326,7 +326,7 @@ export const TimelineProvider: FC<PropsWithChildren>  = ({ children }) => {
       filterables,
       selectedEvent,
       setSelectedEvent,
-    ]
+    ],
   );
 
   return (

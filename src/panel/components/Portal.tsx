@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, PropsWithChildren, FC } from "react";
 import { createPortal } from "react-dom";
 
-export const Portal: FC<PropsWithChildren>  = ({ children }) => {
+export const Portal: FC<PropsWithChildren> = ({ children }) => {
   const root = useRef(document.createElement("div"));
 
   useLayoutEffect(() => {
