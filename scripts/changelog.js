@@ -1,4 +1,4 @@
-const { getInfo } = require("@changesets/get-github-info");
+const { getCommitInfo } = require("@changesets/get-github-info");
 
 const REPO = "urql-graphql/urql-devtools";
 const SEE_LINE = /^See:\s*(.*)/i;
@@ -48,12 +48,12 @@ const changelogFunctions = {
           return (match && match[1].trim()) || undefined;
         }
 
-        const { links } = await getInfo({
+        const info = await getCommitInfo({
           repo: REPO,
           commit: cs.commit,
         });
 
-        return links;
+        return info?.pull?.markdownLink || info?.commit?.markdownLink;
       }),
     );
 
@@ -82,14 +82,14 @@ const changelogFunctions = {
     const [firstLine, ...futureLines] = lines;
 
     if (changeset.commit && !pull) {
-      const { links } = await getInfo({
+      const info = await getCommitInfo({
         repo: REPO,
         commit: changeset.commit,
       });
 
-      pull = links.pull || undefined;
-      commit = links.commit || undefined;
-      user = links.user || undefined;
+      pull = info?.pull?.markdownLink || undefined;
+      commit = info?.commit?.markdownLink || undefined;
+      user = info?.author?.markdownLink || undefined;
     }
 
     let annotation = "";
