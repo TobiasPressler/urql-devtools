@@ -12,6 +12,14 @@ let pendingMessages: ExchangeMessage[] = [];
 const connect = () => {
   if (connection) return connection;
 
+  // `chrome.runtime` is undefined once the extension is reloaded/updated
+  // while this content script is still injected into an existing page —
+  // there's no way to recover short of the page being refreshed.
+  if (typeof chrome === "undefined" || !chrome.runtime) {
+    debug("Extension context invalidated, cannot connect to background");
+    return undefined;
+  }
+
   debug("Connecting to background");
   connection = chrome.runtime.connect({ name: ContentScriptConnectionName });
   connection.onMessage.addListener(handleMessage);
