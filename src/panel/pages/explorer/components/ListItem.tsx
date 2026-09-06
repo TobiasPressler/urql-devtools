@@ -2,14 +2,13 @@ import React, {
   useContext,
   useMemo,
   useCallback,
+  useState,
   FC,
   useEffect,
   useRef,
 } from "react";
-import { animated } from "react-spring";
 import { ParsedFieldNode } from "../../../context/Explorer/ast";
 import { ExplorerContext } from "../../../context";
-import { useFlash } from "../hooks";
 import { InlineCodeHighlight, Arrow } from "../../../components";
 import { Arguments } from "./Arguments";
 import { Tree } from "./Tree";
@@ -18,13 +17,16 @@ import {
   itemWithChildren,
   itemWithoutChildren,
   outlineContainer,
+  flashAnchor,
+  flashOverlay,
   name,
   childrenName,
   typename,
 } from "./ListItem.css";
 
-const AnimatedSpan = animated.span as any;
-const AnimatedDiv = animated.div as any;
+/** Empty overlay whose only purpose is to (re)play the flash animation. */
+const Flash: FC<{ flashKey: number }> = ({ flashKey }) =>
+  flashKey ? <span key={flashKey} className={flashOverlay} /> : null;
 
 interface ListItemProps {
   node: ParsedFieldNode;
@@ -33,7 +35,8 @@ interface ListItemProps {
 
 export const ListItem: FC<ListItemProps> = ({ node, depth = 0 }) => {
   const previousNode = useRef(node);
-  const [flashStyle, flash] = useFlash();
+  const [flashKey, setFlashKey] = useState(0);
+  const flash = useCallback(() => setFlashKey((k) => k + 1), []);
   const { expandedNodes, setExpandedNodes, setFocusedNode } =
     useContext(ExplorerContext);
   const isExpanded = useMemo(
@@ -42,14 +45,13 @@ export const ListItem: FC<ListItemProps> = ({ node, depth = 0 }) => {
   );
 
   useEffect(() => {
-    if (!isExpanded && previousNode.current.children !== node.children) {
-      flash();
-    }
-
-    if (
+    const childrenChanged =
+      !isExpanded && previousNode.current.children !== node.children;
+    const valueChangedWithoutChildren =
       !previousNode.current.children &&
-      previousNode.current.value !== node.value
-    ) {
+      previousNode.current.value !== node.value;
+
+    if (childrenChanged || valueChangedWithoutChildren) {
       flash();
     }
 
@@ -78,16 +80,16 @@ export const ListItem: FC<ListItemProps> = ({ node, depth = 0 }) => {
   ) {
     return (
       <li role="treeitem" className={itemWithChildren}>
-        <AnimatedDiv
+        <div
           onClick={handleFieldContainerClick}
-          style={flashStyle}
           aria-expanded={isExpanded}
           className={outlineContainer}
         >
+          <Flash flashKey={flashKey} />
           <Arrow data-active={isExpanded} />
           <span className={childrenName}>{node.name}</span>
           <Arguments args={node.args} />
-        </AnimatedDiv>
+        </div>
         {isExpanded && <Tree nodeMap={node.children} depth={depth + 1} />}
       </li>
     );
@@ -97,25 +99,23 @@ export const ListItem: FC<ListItemProps> = ({ node, depth = 0 }) => {
     <div className={listItemKeyVal}>
       <span className={name}>{node.name}</span>
       {": "}
-      <AnimatedSpan style={flashStyle}>
+      <span className={flashAnchor}>
+        <Flash flashKey={flashKey} />
         <InlineCodeHighlight
           code={JSON.stringify(node.children || node.value) || "undefined"}
           language="javascript"
         />
-      </AnimatedSpan>
+      </span>
     </div>
   );
 
   if (node.args) {
     return (
       <li role="treeitem" className={itemWithoutChildren}>
-        <AnimatedDiv
-          style={flashStyle}
-          aria-expanded={isExpanded}
-          className={outlineContainer}
-        >
+        <div aria-expanded={isExpanded} className={outlineContainer}>
+          <Flash flashKey={flashKey} />
           {contents}
-        </AnimatedDiv>
+        </div>
       </li>
     );
   }

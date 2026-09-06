@@ -70,7 +70,6 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-is": "^19.2.8",
-    "react-spring": "^10.0.4",
     "ws": "^8.21.3"
   },
   "devDependencies": {
