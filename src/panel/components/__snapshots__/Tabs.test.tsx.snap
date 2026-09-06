@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`on mount > matches snapshot 1`] = `
+<div
+  class="Tabs_container__m56ild0"
+>
+  <h3
+    class="Tabs_tab__m56ild1"
+    data-active="true"
+  >
+    first
+  </h3>
+  <h3
+    class="Tabs_tab__m56ild1"
+    data-active="false"
+  >
+    second
+  </h3>
+</div>
+`;

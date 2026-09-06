@@ -1,44 +1,36 @@
-jest.mock("./TimelineEvent", () => ({
-  TimelineEvent: () => <>TimelineEvent</>,
+vi.mock("./TimelineEvent", () => ({
+  TimelineEvent: () => <div data-testid="timeline-event">TimelineEvent</div>,
 }));
-import { mount } from "enzyme";
-import { ThemeDecorator } from "../../../cosmos.decorator";
+import { beforeAll, describe, expect, it, vi } from "vitest";
+import { render } from "@testing-library/react";
 
-const dateNow = jest.spyOn(Date, "now");
+const dateNow = vi.spyOn(Date, "now");
 
 beforeAll(() => {
   dateNow.mockReturnValue(3000);
 });
 
-// This fixture is variable (dependent on Date.now) so we need to snapshot it in jest
 describe("on fetching", () => {
   describe("network duration", () => {
     it("is fetching", async () => {
       const { default: fixtures } = await import("./TimelineRow.fixture");
       dateNow.mockReturnValue(5000);
-      const wrapper = mount(
-        <ThemeDecorator>{fixtures["network fetching"]}</ThemeDecorator>,
-      );
+      const { container } = render(fixtures["network fetching"]);
 
-      const duration = wrapper.find("NetworkDuration");
-      expect(duration.props()).toHaveProperty("data-state", "fetching");
+      const duration = container.querySelector('[data-state="fetching"]');
+      expect(duration).toBeTruthy();
+      expect(duration!.getAttribute("data-state")).toBe("fetching");
     });
 
     it("grows to current time", async () => {
       const { default: fixtures } = await import("./TimelineRow.fixture");
-      const wrapper = mount(
-        <ThemeDecorator>{fixtures["network fetching"]}</ThemeDecorator>,
-      );
+      const { container } = render(fixtures["network fetching"]);
 
-      const duration = wrapper.find("NetworkDuration");
-      expect(duration.props().style).toMatchInlineSnapshot(`
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 280,
-        }
-      `);
+      const duration = container.querySelector('[data-state="fetching"]');
+      expect(duration).toBeTruthy();
+      expect(duration!.getAttribute("style")).toMatchInlineSnapshot(
+        `"position: absolute; left: 0px; right: 280px; bottom: 0px;"`,
+      );
     });
   });
 });

@@ -1,8 +1,9 @@
+import { expect, it, vi } from "vitest";
 import { DocumentNode } from "graphql";
 import { Operation, gql } from "@urql/core";
 import { handleResponse } from "./index";
 
-jest.mock("nanoid", () => ({
+vi.mock("nanoid", () => ({
   nanoid: () => "[nanoid]",
 }));
 
@@ -314,7 +315,6 @@ it("json on query", () => {
         json
       }
     `,
-    // The `__typename` field should not mislead the cache
     data: {
       __typename: "Query",
       json: { __typename: "Misleading", test: true },
@@ -425,7 +425,6 @@ it("non-keyable entity on query", () => {
         }
       }
     `,
-    // This entity has no `id` or `_id` field
     data: { __typename: "Query", item: { __typename: "Item", name: "Test" } },
   }).toMatchInlineSnapshot(`
     {
@@ -482,7 +481,6 @@ it("invalid entity on query", () => {
         }
       }
     `,
-    // This entity comes back with an invalid typename (for some reason or another)
     data: {
       __typename: "Query",
       item: { __typename: null, id: "123", name: "Test" },
@@ -550,7 +548,6 @@ it("non-IDable entity on query", () => {
         __typename
       }
     `,
-    // This entity has a `__typename` but no ID fields
     data: { __typename: "Query", item: { __typename: "Item", name: "Test" } },
   }).toMatchInlineSnapshot(`
     {
@@ -813,7 +810,6 @@ it("entity with Int-like ID on query", () => {
         }
       }
     `,
-    // This is the same as above, but with a number on `id`
     data: {
       __typename: "Query",
       item: { __typename: "Item", id: 1, name: "Test" },

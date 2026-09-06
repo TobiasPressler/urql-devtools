@@ -1,22 +1,33 @@
-import React from "react";
-import styled from "styled-components";
+import React, { FC, PropsWithChildren } from "react";
 import { scaleLinear } from "d3-scale";
 import { TimelineContext } from "../../../context";
 import { TimelineRow } from "./TimelineRow";
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-grow: 1;
-  padding: 70px;
-  flex-direction: column;
-`;
+const Wrapper: FC<PropsWithChildren> = ({ children }) => (
+  <div
+    style={{
+      display: "flex",
+      flexGrow: 1,
+      padding: 70,
+      flexDirection: "column",
+    }}
+  >
+    {children}
+  </div>
+);
 
-const Viewport = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  max-width: 300px;
-`;
+const Viewport: FC<PropsWithChildren> = ({ children }) => (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      maxWidth: 300,
+    }}
+  >
+    {children}
+  </div>
+);
 
 const context = {
   container: {
