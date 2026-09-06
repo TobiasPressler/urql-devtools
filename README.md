@@ -1,3 +1,5 @@
+> **📌 Maintained Fork** — This is an actively maintained fork of [urql-graphql/urql-devtools](https://github.com/urql-graphql/urql-devtools). The original project is no longer actively maintained. This fork continues to receive updates, bug fixes, and compatibility improvements (e.g. Manifest V3, React 19, modern tooling).
+
 <div align="center">
   <img alt="logo" src="https://raw.githubusercontent.com/urql-graphql/urql-devtools/master/src/assets/icon.svg?sanitize=true" />
   <h1>Urql Devtools</h1>
