@@ -2,6 +2,5 @@
   "$schema": "https://unpkg.com/@changesets/config@0.3.0/schema.json",
   "changelog": "../scripts/changelog.js",
   "commit": false,
-  "access": "public",
-  "baseBranch": "master"
+  "access": "public"
 }
