@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`on mount > matches snapshot 1`] = `
+<div
+  class="Disconnected_container__hnfie70 "
+>
+  <svg
+    class="Disconnected_logo__hnfie73"
+    data-testid="icon"
+  />
+  <h1
+    class="Disconnected_header__hnfie71"
+  >
+    Waiting for exchange
+  </h1>
+  <p
+    class="Disconnected_hint__hnfie72"
+  >
+    Make sure 
+    you're
+     using the Urql Devtools exchange!
+  </p>
+</div>
+`;

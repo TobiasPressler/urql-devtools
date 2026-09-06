@@ -1,15 +1,16 @@
-jest.mock("../hooks", () => ({
-  useOrientationWatcher: jest.fn(),
+vi.mock("../hooks", () => ({
+  useOrientationWatcher: vi.fn(),
 }));
 
-import { shallow } from "enzyme";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { useOrientationWatcher } from "../hooks";
 import { Pane } from "./Pane";
 
-const useOrientation = useOrientationWatcher as jest.Mocked<any>;
-const addEventListener = jest.spyOn(window, "addEventListener");
+const useOrientation = useOrientationWatcher as vi.Mocked<any>;
+const addEventListener = vi.spyOn(window, "addEventListener");
 
-beforeEach(jest.clearAllMocks);
+beforeEach(vi.clearAllMocks);
 
 describe("on mount", () => {
   describe("on portrait orientation", () => {
@@ -18,8 +19,8 @@ describe("on mount", () => {
     });
 
     it("matches snapshot", () => {
-      const wrapper = shallow(<Pane />);
-      expect(wrapper).toMatchSnapshot();
+      const { container } = render(<Pane />);
+      expect(container.firstChild).toMatchSnapshot();
     });
   });
 
@@ -32,19 +33,19 @@ describe("on mount", () => {
     });
 
     it("matches snapshot", () => {
-      const wrapper = shallow(<Pane />);
-      expect(wrapper).toMatchSnapshot();
+      const { container } = render(<Pane />);
+      expect(container.firstChild).toMatchSnapshot();
     });
   });
 });
 
 describe("on mouse down", () => {
   beforeEach(() => {
-    const wrapper = shallow(<Pane />);
-    wrapper
-      .find('[role="seperator"]')
-      .simulate("mouseDown", { button: 0, preventDefault: jest.fn() });
+    render(<Pane />);
+    const separator = screen.getAllByRole("seperator")[0];
+    fireEvent.mouseDown(separator, { button: 0 });
   });
+
   it("listens for mouse up events", () => {
     expect(addEventListener).toHaveBeenCalledWith(
       "mouseup",

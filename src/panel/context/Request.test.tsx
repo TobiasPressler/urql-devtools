@@ -1,7 +1,15 @@
-jest.mock("./Devtools");
+vi.mock("./Devtools");
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+  type Mocked,
+} from "vitest";
 import { useContext } from "react";
-import { mount } from "enzyme";
-import { act } from "react-dom/test-utils";
+import { render, act } from "@testing-library/react";
 import {
   getIntrospectionQuery,
   parse,
@@ -11,13 +19,13 @@ import {
 import { useDevtoolsContext } from "./Devtools";
 import { RequestProvider, RequestContext } from "./Request";
 
-const sendMessage = jest.fn();
-const addMessageHandler = jest.fn();
-const getItem = jest.spyOn(Storage.prototype, "getItem");
-const setItem = jest.spyOn(Storage.prototype, "setItem");
+const sendMessage = vi.fn();
+const addMessageHandler = vi.fn();
+const getItem = vi.spyOn(Storage.prototype, "getItem");
+const setItem = vi.spyOn(Storage.prototype, "setItem");
 
 beforeEach(() => {
-  (useDevtoolsContext as jest.Mocked<any>).mockReturnValue({
+  (useDevtoolsContext as Mocked<any>).mockReturnValue({
     client: {
       connected: true,
       version: {
@@ -31,7 +39,7 @@ beforeEach(() => {
   });
 });
 
-beforeEach(jest.clearAllMocks);
+beforeEach(vi.clearAllMocks);
 
 let state: any;
 
@@ -43,7 +51,7 @@ const Fixture = () => {
 describe("on mount", () => {
   beforeEach(() => {
     getItem.mockReturnValue(null);
-    mount(
+    render(
       <RequestProvider>
         <Fixture />
       </RequestProvider>,
@@ -87,7 +95,7 @@ describe("on mount", () => {
 describe("on remount", () => {
   beforeEach(() => {
     getItem.mockReturnValue("query { _id }");
-    mount(
+    render(
       <RequestProvider>
         <Fixture />
       </RequestProvider>,
@@ -119,7 +127,7 @@ describe("on setQuery", () => {
   const query = "stub query";
 
   beforeEach(() => {
-    mount(
+    render(
       <RequestProvider>
         <Fixture />
       </RequestProvider>,
@@ -145,7 +153,7 @@ describe("on execute", () => {
   const query = "stub query";
 
   beforeEach(() => {
-    mount(
+    render(
       <RequestProvider>
         <Fixture />
       </RequestProvider>,
@@ -179,7 +187,7 @@ describe("on execute", () => {
 
 describe("on debug message", () => {
   beforeEach(() => {
-    mount(
+    render(
       <RequestProvider>
         <Fixture />
       </RequestProvider>,
@@ -234,18 +242,20 @@ describe("on debug message", () => {
             "query": undefined,
             "response": undefined,
             "schema": GraphQLSchema {
+              "__kind": Symbol(Schema),
               "__validationErrors": undefined,
               "_directives": [
                 "@include",
                 "@skip",
                 "@deprecated",
                 "@specifiedBy",
+                "@oneOf",
                 "@populate",
               ],
               "_implementationsMap": {},
               "_mutationType": null,
               "_queryType": "Simple",
-              "_subTypeMap": {},
+              "_subTypeMap": Map {},
               "_subscriptionType": null,
               "_typeMap": {
                 "Boolean": "Boolean",
@@ -260,8 +270,9 @@ describe("on debug message", () => {
                 "__Type": "__Type",
                 "__TypeKind": "__TypeKind",
               },
+              "assumeValid": false,
               "astNode": undefined,
-              "description": undefined,
+              "description": null,
               "extensionASTNodes": [],
               "extensions": {},
             },

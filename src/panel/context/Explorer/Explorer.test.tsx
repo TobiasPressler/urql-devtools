@@ -1,17 +1,17 @@
-jest.mock("../Devtools");
-jest.mock("./ast");
+vi.mock("../Devtools");
+vi.mock("./ast");
+import { beforeEach, describe, expect, it, vi, type Mocked } from "vitest";
 import { useContext } from "react";
-import { mount } from "enzyme";
-import { act } from "react-dom/test-utils";
+import { render, act } from "@testing-library/react";
 import { useDevtoolsContext } from "../Devtools";
 import { ExplorerProvider, ExplorerContext } from "../Explorer";
 import { defaultEvents } from "../../pages/explorer/Explorer.fixture";
 import { handleResponse } from "./ast";
-const sendMessage = jest.fn();
-const addMessageHandler = jest.fn();
+const sendMessage = vi.fn();
+const addMessageHandler = vi.fn();
 
 beforeEach(() => {
-  (useDevtoolsContext as jest.Mocked<any>).mockReturnValue({
+  (useDevtoolsContext as Mocked<any>).mockReturnValue({
     client: {
       connected: true,
       version: {
@@ -25,7 +25,7 @@ beforeEach(() => {
   });
 });
 
-beforeEach(jest.clearAllMocks);
+beforeEach(vi.clearAllMocks);
 
 let state: any;
 
@@ -36,7 +36,7 @@ const Fixture = () => {
 
 describe("on mount", () => {
   beforeEach(() => {
-    mount(
+    render(
       <ExplorerProvider>
         <Fixture />
       </ExplorerProvider>,
@@ -65,8 +65,8 @@ describe("on mount", () => {
 describe("DebugMessage", () => {
   beforeEach(async () => {
     addMessageHandler.mockImplementationOnce((cb) => cb(defaultEvents[0]));
-    await act(async () => {
-      mount(
+    act(() => {
+      render(
         <ExplorerProvider>
           <Fixture />
         </ExplorerProvider>,
@@ -89,25 +89,22 @@ describe("unknown message", () => {
   beforeEach(() => {
     addMessageHandler.mockImplementationOnce((cb) => cb({ type: "unknown" }));
   });
-  it("doesn't call handleResponse", (done) => {
-    act(() => {
-      mount(
-        <ExplorerProvider>
-          <Fixture />
-        </ExplorerProvider>,
-      );
-    });
+  it("doesn't call handleResponse", () => {
+    render(
+      <ExplorerProvider>
+        <Fixture />
+      </ExplorerProvider>,
+    );
     expect(addMessageHandler).toHaveBeenCalledTimes(1);
     expect(handleResponse).toHaveBeenCalledTimes(0);
-    done();
   });
 });
 
 describe("disconnect message", () => {
   beforeEach(async () => {
     addMessageHandler.mockImplementationOnce((cb) => cb(defaultEvents[0]));
-    await act(async () => {
-      mount(
+    act(() => {
+      render(
         <ExplorerProvider>
           <Fixture />
         </ExplorerProvider>,
@@ -116,8 +113,8 @@ describe("disconnect message", () => {
     addMessageHandler.mockImplementationOnce((cb) =>
       cb({ type: "disconnect" }),
     );
-    await act(async () => {
-      mount(
+    act(() => {
+      render(
         <ExplorerProvider>
           <Fixture />
         </ExplorerProvider>,
@@ -126,7 +123,6 @@ describe("disconnect message", () => {
   });
   it("doesn't call handleResponse and resets the operations", () => {
     expect(addMessageHandler).toHaveBeenCalledTimes(2);
-    // * once for initial DebugMessage
     expect(handleResponse).toHaveBeenCalledTimes(1);
 
     expect(state).toEqual(

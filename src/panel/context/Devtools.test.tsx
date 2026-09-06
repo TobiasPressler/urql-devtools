@@ -1,17 +1,21 @@
-jest.mock("../util/Connection");
-import { mount } from "enzyme";
-import { act } from "react-dom/test-utils";
+vi.mock("../util/Connection");
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { render, act } from "@testing-library/react";
 import { createConnection } from "../util";
 import { DevtoolsProvider, useDevtoolsContext } from "./Devtools";
 
 const connection = {
   onMessage: {
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
   },
-  postMessage: jest.fn(),
+  postMessage: vi.fn(),
+  onDisconnect: {
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+  },
 };
-(createConnection as jest.Mocked<any>).mockReturnValue(connection);
+(createConnection as any).mockReturnValue(connection);
 
 let state: ReturnType<typeof useDevtoolsContext>;
 
@@ -36,14 +40,14 @@ const Fixture = () => (
 );
 
 beforeAll(() => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
 });
 
-beforeEach(jest.clearAllMocks);
+beforeEach(vi.clearAllMocks);
 
 describe("on mount", () => {
   beforeEach(() => {
-    mount(<Fixture />);
+    render(<Fixture />);
   });
 
   it("sends an init message w/ tabId", () => {
@@ -67,13 +71,13 @@ describe("on message", () => {
   let sendMessage: (msg: any) => void;
 
   beforeEach(() => {
-    mount(<Fixture />);
+    render(<Fixture />);
     sendMessage = connection.onMessage.addListener.mock.calls[0][0];
   });
 
   it("sends to message handlers", () => {
     const message = { type: "connection-init", source: "exchange" };
-    const handler = jest.fn();
+    const handler = vi.fn();
 
     act(() => {
       state.addMessageHandler(handler);
@@ -104,7 +108,11 @@ describe("on message", () => {
 
       it("updates version state", async () => {
         act(() => {
-          sendMessage({ type: "connection-init", source: "exchange", version });
+          sendMessage({
+            type: "connection-init",
+            source: "exchange",
+            version,
+          });
         });
 
         expect(state.client).toEqual({
@@ -123,7 +131,11 @@ describe("on message", () => {
 
       it("updates version state", async () => {
         act(() => {
-          sendMessage({ type: "connection-init", source: "exchange", version });
+          sendMessage({
+            type: "connection-init",
+            source: "exchange",
+            version,
+          });
         });
 
         expect(state.client).toEqual({
@@ -220,7 +232,7 @@ describe("on message", () => {
 
 describe("on sendMessage", () => {
   beforeEach(() => {
-    mount(<Fixture />);
+    render(<Fixture />);
   });
 
   it("calls postMessage", () => {

@@ -1,49 +1,46 @@
-import { act } from "react-dom/test-utils";
-import { mount } from "enzyme";
-import { ThemeDecorator } from "../../../cosmos.decorator";
+import { describe, expect, it } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import fixtures from "./Settings.fixture";
 
 describe("on icon click", () => {
   it("expands content", () => {
-    const wrapper = mount(<ThemeDecorator>{fixtures.settings}</ThemeDecorator>);
-    wrapper.find("svg").at(0).simulate("click");
-    wrapper.update();
-    expect(wrapper.find("Content").props()).toHaveProperty("collapsed", false);
+    render(fixtures.settings);
+    const button = screen.getByTitle("Show filters");
+    fireEvent.click(button);
+
+    const collapsible = document.querySelector("[aria-expanded]");
+    expect(collapsible).toHaveAttribute("aria-expanded", "true");
   });
 });
 
 describe("on filter click", () => {
   it("enables filters", () => {
-    const wrapper = mount(<ThemeDecorator>{fixtures.filter}</ThemeDecorator>);
-    act(() => {
-      wrapper
-        .find("FilterButton[aria-selected=false]")
-        .forEach((b) => b.simulate("click"));
-    });
+    render(fixtures.filter);
+    const checkboxes = screen.getAllByRole("checkbox");
+    const unchecked = checkboxes.filter(
+      (b) => b.getAttribute("aria-selected") === "false",
+    );
 
-    act(() => {
-      wrapper.update();
-    });
+    unchecked.forEach((b) => fireEvent.click(b));
 
-    wrapper
-      .find("FilterButton")
-      .forEach((b) => expect(b.props()).toHaveProperty("aria-selected", true));
+    const allCheckboxes = screen.getAllByRole("checkbox");
+    allCheckboxes.forEach((b) =>
+      expect(b).toHaveAttribute("aria-selected", "true"),
+    );
   });
 
   it("disables filters", () => {
-    const wrapper = mount(<ThemeDecorator>{fixtures.filter}</ThemeDecorator>);
-    act(() => {
-      wrapper
-        .find("FilterButton[aria-selected=true]")
-        .forEach((b) => b.simulate("click"));
-    });
+    render(fixtures.filter);
+    const checkboxes = screen.getAllByRole("checkbox");
+    const checked = checkboxes.filter(
+      (b) => b.getAttribute("aria-selected") === "true",
+    );
 
-    act(() => {
-      wrapper.update();
-    });
+    checked.forEach((b) => fireEvent.click(b));
 
-    wrapper
-      .find("FilterButton")
-      .forEach((b) => expect(b.props()).toHaveProperty("aria-selected", false));
+    const allCheckboxes = screen.getAllByRole("checkbox");
+    allCheckboxes.forEach((b) =>
+      expect(b).toHaveAttribute("aria-selected", "false"),
+    );
   });
 });

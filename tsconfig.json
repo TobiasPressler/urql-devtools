@@ -10,7 +10,7 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["@types/chrome", "jest"]
+    "types": ["@types/chrome"]
   },
   "include": ["src"],
   "exclude": [

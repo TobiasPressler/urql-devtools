@@ -1,7 +1,8 @@
-import { shallow } from "enzyme";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { Tabs } from "./Tabs";
 
-beforeEach(jest.clearAllMocks);
+beforeEach(vi.clearAllMocks);
 
 const props = {
   active: "a",
@@ -9,20 +10,21 @@ const props = {
     { label: "first", value: "a" },
     { label: "second", value: "b" },
   ],
-  setActive: jest.fn(),
+  setActive: vi.fn(),
 };
 
 describe("on mount", () => {
   it("matches snapshot", () => {
-    const wrapper = shallow(<Tabs {...props} />);
-    expect(wrapper).toMatchSnapshot();
+    const { container } = render(<Tabs {...props} />);
+    expect(container.firstChild).toMatchSnapshot();
   });
 });
 
 describe("on tab click", () => {
   it("calls setActive", () => {
-    const wrapper = shallow(<Tabs {...props} />);
-    wrapper.find("h3:last-child").simulate("click");
+    render(<Tabs {...props} />);
+    const tabs = screen.getAllByRole("heading");
+    fireEvent.click(tabs[1]);
     expect(props.setActive).toHaveBeenCalledWith("b");
   });
 });

@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`on mount > on landscape orientation > matches snapshot 1`] = `
+<div
+  class="Pane_container__10k0spc0 "
+  data-portrait="false"
+  style="min-width: 400px; width: 400px; height: auto;"
+>
+  <div
+    aria-grabbed="false"
+    aria-orientation="vertical"
+    class="Pane_draggingEdge__10k0spc1"
+    data-portrait="false"
+    role="seperator"
+  />
+</div>
+`;
+
+exports[`on mount > on portrait orientation > matches snapshot 1`] = `
+<div
+  class="Pane_container__10k0spc0 "
+  data-portrait="true"
+  style="min-height: 400px; height: 400px; width: auto;"
+>
+  <div
+    aria-grabbed="false"
+    aria-orientation="horizontal"
+    class="Pane_draggingEdge__10k0spc1"
+    data-portrait="true"
+    role="seperator"
+  />
+</div>
+`;

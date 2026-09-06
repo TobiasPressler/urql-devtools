@@ -1,6 +1,5 @@
-import { configure } from "enzyme";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import puppeteer, { Browser, Page } from "puppeteer";
+import "@testing-library/jest-dom/vitest";
+import { vi } from "vitest";
 
 process.env.BUILD_ENV = "extension";
 process.env.PKG_VERSION = "200.0.0";
@@ -16,69 +15,31 @@ declare const global: {
       };
     };
   };
-  browser: Browser;
-  page: Page;
   matchMedia: any;
   ResizeObserver: ResizeObserver;
 };
 
-(() => {
-  // Setup enzyme
-  configure({ adapter: new Adapter() });
-
-  global.ResizeObserver = function ResizeObserver() {
-    return {
-      observe: jest.fn(),
-      disconnect: jest.fn(),
-      unobserve: jest.fn(),
-    };
-  } as any;
-  global.matchMedia = jest.fn(() => {
-    return {
-      matches: false,
-    } as any;
-  });
-  global.chrome = {
-    devtools: {
-      inspectedWindow: {
-        eval: jest.fn(),
-      },
-      panels: {
-        themeName: "dark",
-      },
-    },
+global.ResizeObserver = function ResizeObserver() {
+  return {
+    observe: vi.fn(),
+    disconnect: vi.fn(),
+    unobserve: vi.fn(),
   };
-
-  // Start browser
-  beforeAll(async () => {
-    // Aim to render fonts consistently between invocations
-    const args = ["--font-render-hinting=none"];
-    global.browser = await puppeteer.launch({
-      args: [...args, "--no-sandbox"],
-      headless: process.env.HEADLESS !== "false",
-    });
-  });
-
-  // Create page
-  beforeEach(async () => {
-    global.page = await global.browser.newPage();
-  });
-
-  // Teardown page
-  afterEach(async () => {
-    if (!global.page) {
-      return;
-    }
-
-    await global.page.close();
-  });
-
-  // Teardown browser
-  afterAll(async () => {
-    if (!global.browser) {
-      return;
-    }
-
-    await global.browser.close();
-  });
-})();
+} as any;
+global.matchMedia = vi.fn(() => {
+  return {
+    matches: false,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  } as any;
+});
+global.chrome = {
+  devtools: {
+    inspectedWindow: {
+      eval: vi.fn(),
+    },
+    panels: {
+      themeName: "dark",
+    },
+  },
+};
