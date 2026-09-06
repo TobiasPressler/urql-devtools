@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { NavLink } from "react-router-dom";
 import Icon from "../../assets/icon.svg";
 import { container, item, logo } from "./Navigation.css";
+import { useNavigationContext } from "../App";
 
 type NavItem = { link: string; label: string };
 
@@ -11,28 +11,31 @@ const LogoIcon: FC<React.SVGProps<SVGSVGElement>> = (props) => (
 
 export const Navigation: FC<
   { items: NavItem[] } & React.HTMLAttributes<HTMLDivElement>
-> = ({ items, ...props }) => (
-  <div {...props} className={`${container} ${props.className || ""}`}>
-    {items.map((itemData, index) => (
-      <NavLink
-        key={index}
-        to={itemData.link}
-        className={({ isActive }) =>
-          `${item.default}${isActive ? " active" : ""}`
-        }
-      >
-        {itemData.label}
-      </NavLink>
-    ))}
+> = ({ items, ...props }) => {
+  const { active, setActive } = useNavigationContext();
+  return (
+    <div {...props} className={`${container} ${props.className || ""}`}>
+      {items.map((itemData, index) => (
+        <button
+          key={index}
+          onClick={() => {
+            setActive(itemData.link as "/explorer" | "/events" | "/request");
+          }}
+          className={`${item.default}${active === itemData.link ? " active" : ""}`}
+        >
+          {itemData.label}
+        </button>
+      ))}
 
-    <a
-      href="https://formidable.com/open-source/urql/"
-      target="_blank"
-      rel="noopener"
-      title="urql Documentation"
-      className={item.alignRight}
-    >
-      <LogoIcon />
-    </a>
-  </div>
-);
+      <a
+        href="https://formidable.com/open-source/urql/"
+        target="_blank"
+        rel="noopener"
+        title="urql Documentation"
+        className={item.alignRight}
+      >
+        <LogoIcon />
+      </a>
+    </div>
+  );
+};

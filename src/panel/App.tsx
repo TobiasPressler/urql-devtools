@@ -1,7 +1,6 @@
 import "./App.css";
 import "./global.css";
-import { FC, useLayoutEffect } from "react";
-import { HashRouter, useLocation, Navigate } from "react-router-dom";
+import { createContext, FC, use, useContext, useLayoutEffect, useState } from "react";
 import { Activity } from "react";
 import {
   Disconnected,
@@ -48,32 +47,49 @@ export const App: FC = () => {
   );
 };
 
+const NavigationContext = createContext<{
+  active: "/explorer" | "/events" | "/request";
+  setActive: (active: "/explorer" | "/events" | "/request") => void;
+}>({ active: "/explorer", setActive: () => {} });
+
+export const useNavigationContext = () => {
+  const context = use(NavigationContext);
+  if (!context) {
+    throw new Error("useNavigationContext must be used within a NavigationContext.Provider");
+  }
+  return context;
+};
+
 const RoutedContent: FC = () => {
-  const { pathname } = useLocation();
+  const { active } = useNavigationContext();
 
   return (
-    <>
-      <Activity mode={pathname === "/events" ? "visible" : "hidden"}>
+   <>
+      <Activity mode={active === "/events" ? "visible" : "hidden"}>
         <TimelineProvider>
           <Timeline />
         </TimelineProvider>
       </Activity>
-      <Activity mode={pathname === "/request" ? "visible" : "hidden"}>
+      <Activity mode={active === "/request" ? "visible" : "hidden"}>
         <RequestProvider>
           <Request />
         </RequestProvider>
       </Activity>
-      <Activity mode={pathname === "/explorer" || pathname === "/" ? "visible" : "hidden"}>
+      <Activity
+        mode={
+          active === "/explorer" ? "visible" : "hidden"
+        }
+      >
         <ExplorerProvider>
           <Explorer />
         </ExplorerProvider>
       </Activity>
-      {pathname === "/" && <Navigate to="/explorer" replace />}
     </>
   );
 };
 
 export const AppRoutes: FC = () => {
+  const [active, setActive] = useState<"/explorer" | "/events" | "/request">("/explorer");
   const { client } = useDevtoolsContext();
 
   if (!client.connected) {
@@ -85,7 +101,7 @@ export const AppRoutes: FC = () => {
   }
 
   return (
-    <HashRouter>
+     <NavigationContext.Provider value={{ active, setActive }}>
       <Navigation
         items={[
           { link: "/explorer", label: "Explorer" },
@@ -94,6 +110,6 @@ export const AppRoutes: FC = () => {
         ]}
       />
       <RoutedContent />
-    </HashRouter>
+    </NavigationContext.Provider>
   );
 };
