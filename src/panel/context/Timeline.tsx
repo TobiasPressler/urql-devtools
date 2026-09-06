@@ -75,6 +75,10 @@ const useTimelineDomain = () => {
       .range([0, ref.current.clientWidth]);
 
     setScale((oldScale) => {
+      if (!ref.current) {
+        return oldScale;
+      }
+
       if (
         oldScale.scale &&
         // Scale hasn't changed
