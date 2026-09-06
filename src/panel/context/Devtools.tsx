@@ -31,10 +31,17 @@ export interface DevtoolsContextType {
 
 const REQUIRED_VERSION = "2.0.0";
 
-export const DevtoolsContext = createContext<DevtoolsContextType>(null as any);
+export const DevtoolsContext = createContext<DevtoolsContextType | undefined>(
+  undefined
+);
 
-export const useDevtoolsContext = (): DevtoolsContextType =>
-  useContext(DevtoolsContext);
+export const useDevtoolsContext = (): DevtoolsContextType => {
+  const context = useContext(DevtoolsContext);
+  if (context === undefined) {
+    throw new Error("useDevtoolsContext must be used within a DevtoolsProvider");
+  }
+  return context;
+};
 
 const sendInitMessage = (conn: ReturnType<typeof createConnection>) => {
   conn.postMessage({

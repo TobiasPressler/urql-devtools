@@ -14,7 +14,7 @@ import React, {
 } from "react";
 import { scaleLinear, ScaleLinear } from "d3-scale";
 import { DebugEvent } from "@urql/core";
-import { DevtoolsContext } from "./Devtools";
+import { useDevtoolsContext } from "./Devtools";
 
 interface TimelineContextValue {
   selectedEvent?: DebugEvent & { duration?: number };
@@ -263,7 +263,7 @@ const useTimelineDomain = () => {
 };
 
 export const TimelineProvider: FC<PropsWithChildren>  = ({ children }) => {
-  const { addMessageHandler } = useContext(DevtoolsContext);
+  const { addMessageHandler } = useDevtoolsContext();
   const domain = useTimelineDomain();
   const [filterables, setFilterables] = useState<
     TimelineContextValue["filterables"]
