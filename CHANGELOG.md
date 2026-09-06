@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.0.0
+
+### Major Changes
+
+- Big refactor landed:
+  - Jest → Vitest for tests
+  - styled-components → vanilla-extract for styling (all .css.ts now)
+  - Manifest V3 migration for the extension
+  - Added prettier + flat ESLint config
+  - Service worker keepalive + extension context invalidation fixes
+  - New build scripts, removed webpack configs (using tsup)
+  - Better connection handling & context-based routing
+  - CI workflows updated, by [@TobiasPressler](https://github.com/TobiasPressler) (See [`a874f4d`](https://github.com/urql-graphql/urql-devtools/commit/a874f4dcd92ebb1e99504a8192e12d5cfc10ca01))
+
 ## [v2.6.3](https://github.com/FormidableLabs/urql-devtools/tree/v2.6.3) (2021-12-03)
 
 [Full Changelog](https://github.com/FormidableLabs/urql-devtools/compare/v2.6.2...v2.6.3)
